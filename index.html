@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="bn" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VYRO WEAR PRO - Business Management System</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        navy: { 900: '#0b0f19', 800: '#111827', 700: '#1f2937', 600: '#374151' }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Bengali -->
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Hind Siliguri', sans-serif; }
+    </style>
+</head>
+<body class="bg-navy-900 text-gray-100 min-h-screen flex flex-col">
+    <!-- App Header with Logo -->
+    <header class="bg-navy-800 border-b border-navy-700 sticky top-0 z-50 px-4 py-3 flex items-center justify-between shadow-md">
+        <div class="flex items-center space-x-3">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=60" alt="VYRO WEAR Logo" class="w-10 h-10 rounded-full border border-gray-600 object-cover shadow-sm">
+            <div>
+                <h1 class="font-bold text-lg text-white leading-tight">VYRO WEAR PRO</h1>
+                <p class="text-xs text-gray-400">এলিভেট ইউর এভরিডে (৳ BDT)</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-2">
+            <span class="text-xs bg-emerald-600 text-white px-2 py-1 rounded-full font-medium">অনলাইন</span>
+            <button onclick="alert('নোটিফিকেশন সেন্টার')" class="p-2 text-gray-300 hover:text-white relative">
+                <i class="fa-solid fa-bell text-lg"></i>
+                <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 p-4 max-w-7xl mx-auto w-full pb-20">
+        <!-- Dashboard Welcome Banner -->
+        <div class="bg-gradient-to-r from-navy-800 to-navy-700 border border-navy-600 rounded-2xl p-5 mb-6 shadow-lg">
+            <h2 class="text-xl font-bold text-white mb-1">স্বাগতম, ওনার! 👋</h2>
+            <p class="text-sm text-gray-300">VYRO WEAR ব্র্যান্ডের আজকের রিয়েল-টাইম হিসাব নিচে দেওয়া হলো।</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl shadow">
+                <p class="text-xs text-gray-400 mb-1">আজকের মোট বিক্রয়</p>
+                <h3 class="text-xl font-bold text-emerald-400">৳ ০.০০</h3>
+            </div>
+            <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl shadow">
+                <p class="text-xs text-gray-400 mb-1">আজকের অর্ডার</p>
+                <h3 class="text-xl font-bold text-blue-400">০ টি</h3>
+            </div>
+            <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl shadow">
+                <p class="text-xs text-gray-400 mb-1">আজকের খরচ</p>
+                <h3 class="text-xl font-bold text-red-400">৳ ০.০০</h3>
+            </div>
+            <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl shadow">
+                <p class="text-xs text-gray-400 mb-1">আজকের লাভ</p>
+                <h3 class="text-xl font-bold text-amber-400">৳ ০.০০</h3>
+            </div>
+        </div>
+
+        <!-- Quick Navigation / Modules -->
+        <div class="grid grid-cols-3 md:grid-cols-6 gap-3 mb-6">
+            <button onclick="alert('POS সিস্টেম ওপেন হচ্ছে')" class="bg-navy-800 hover:bg-navy-700 border border-navy-700 p-3 rounded-xl flex flex-col items-center text-center transition">
+                <i class="fa-solid fa-cash-register text-emerald-400 text-xl mb-1"></i>
+                <span class="text-xs font-medium">POS সেলস</span>
+            </button>
+            <button onclick="alert('অর্ডার ম্যানেজমেন্ট')" class="bg-navy-800 hover:bg-navy-700 border border-navy-700 p-3 rounded-xl flex flex-col items-center text-center transition">
+                <i class="fa-solid fa-box-open text-blue-400 text-xl mb-1"></i>
+                <span class="text-xs font-medium">অর্ডারস</span>
+            </button>
+            <button onclick="alert('প্রোডাক্ট ও স্টক')" class="bg-navy-800 hover:bg-navy-700 border border-navy-700 p-3 rounded-xl flex flex-col items-center text-center transition">
+                <i class="fa-solid fa-shirt text-purple-400 text-xl mb-1"></i>
+                <span class="text-xs font-medium">পণ্য ও স্টক</span>
+            </button>
+            <button onclick="alert('খরচ ম্যানেজমেন্ট')" class="bg-navy-800 hover:bg-navy-700 border border-navy-700 p-3 rounded-xl flex flex-col items-center text-center transition">
+                <i class="fa-solid fa-wallet text-red-400 text-xl mb-1"></i>
+                <span class="text-xs font-medium">খরচসমূহ</span>
+            </button>
+            <button onclick="alert('কাস্টমার তালিকা')" class="bg-navy-800 hover:bg-navy-700 border border-navy-700 p-3 rounded-xl flex flex-col items-center text-center transition">
+                <i class="fa-solid fa-users text-amber-400 text-xl mb-1"></i>
+                <span class="text-xs font-medium">কাস্টমার</span>
+            </button>
+            <button onclick="alert('রিপোর্ট ও সেটিংস')" class="bg-navy-800 hover:bg-navy-700 border border-navy-700 p-3 rounded-xl flex flex-col items-center text-center transition">
+                <i class="fa-solid fa-chart-line text-teal-400 text-xl mb-1"></i>
+                <span class="text-xs font-medium">রিপোর্টস</span>
+            </button>
+        </div>
+
+        <!-- Recent Orders Section -->
+        <div class="bg-navy-800 border border-navy-700 rounded-xl p-4 shadow">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="font-bold text-sm text-white">সাম্প্রতিক অর্ডারসমূহ</h3>
+                <span class="text-xs text-gray-400">সব দেখুন</span>
+            </div>
+            <div class="text-center py-6 text-gray-400 text-sm">
+                <i class="fa-solid fa-box-archive text-3xl mb-2 text-gray-600"></i>
+                <p>কোনো অর্ডার পাওয়া যায়নি। নতুন সেল রেকর্ড করুন।</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation Bar for Mobile -->
+    <nav class="bg-navy-800 border-t border-navy-700 fixed bottom-0 left-0 right-0 py-2 px-4 flex justify-between items-center z-50 shadow-lg">
+        <button class="flex flex-col items-center text-emerald-400">
+            <i class="fa-solid fa-house text-lg"></i>
+            <span class="text-[10px]">হোম</span>
+        </button>
+        <button class="flex flex-col items-center text-gray-400 hover:text-white">
+            <i class="fa-solid fa-cash-register text-lg"></i>
+            <span class="text-[10px]">POS</span>
+        </button>
+        <button class="flex flex-col items-center text-gray-400 hover:text-white">
+            <i class="fa-solid fa-box-open text-lg"></i>
+            <span class="text-[10px]">অর্ডার</span>
+        </button>
+        <button class="flex flex-col items-center text-gray-400 hover:text-white">
+            <i class="fa-solid fa-shirt text-lg"></i>
+            <span class="text-[10px]">স্টক</span>
+        </button>
+        <button class="flex flex-col items-center text-gray-400 hover:text-white">
+            <i class="fa-solid fa-bars text-lg"></i>
+            <span class="text-[10px]">মেনু</span>
+        </button>
+    </nav>
+</body>
+</html>
