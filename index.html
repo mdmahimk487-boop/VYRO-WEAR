@@ -1,445 +1,422 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  LayoutDashboard, ShoppingBag, Package, Layers, Users, 
-  Receipt, PieChart, FileText, Settings, LogOut, Globe, Plus, Trash2, CheckCircle 
-} from 'lucide-react';
-
-export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [email, setEmail] = useState('owner@vyrowear.com');
-  const [password, setPassword] = useState('vyro1234');
-  const [activeTab, setActiveTab] = useState('dashboard');
-  const [lang, setLang] = useState('bn'); // 'bn' or 'en'
-
-  // Persistent States
-  const [products, setProducts] = useState(() => {
-    const saved = localStorage.getItem('vyro_products');
-    return saved ? JSON.parse(saved) : [
-      { id: '1', name: 'Oversized Noir Hoodie', sku: 'VYRO-HD-01', category: 'Hoodies', cost: 1200, price: 2490, stock: 15, size: 'L', color: 'Black' }
-    ];
-  });
-
-  const [orders, setOrders] = useState(() => {
-    const saved = localStorage.getItem('vyro_orders');
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  const [expenses, setExpenses] = useState(() => {
-    const saved = localStorage.getItem('vyro_expenses');
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  useEffect(() => {
-    localStorage.setItem('vyro_products', JSON.stringify(products));
-    localStorage.setItem('vyro_orders', JSON.stringify(orders));
-    localStorage.setItem('vyro_expenses', JSON.stringify(expenses));
-  }, [products, orders, expenses]);
-
-  // Handle Login
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (email && password) {
-      setIsAuthenticated(true);
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VYRO WEAR — Business Management System</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Alpine.js (Lightweight Reactive Framework for HTML) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            obsidian: '#0B0B0C',
+            cardDark: '#141416',
+            silverAccent: '#C0C0C0',
+            silverLight: '#E5E4E2'
+          }
+        }
+      }
     }
-  };
+  </script>
+  
+  <style>
+    body {
+      background-color: #0B0B0C;
+      color: #F8F9FA;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: #0B0B0C; }
+    ::-webkit-scrollbar-thumb { background: #333338; border-radius: 2px; }
+  </style>
+</head>
+<body x-data="vyroApp()" x-init="initApp()" class="min-h-screen bg-obsidian text-zinc-100 pb-20 md:pb-0">
 
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-[#0B0B0C] flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-[#141416] border border-zinc-800 rounded-2xl p-8 shadow-2xl">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold tracking-widest text-[#C0C0C0]">VYRO WEAR</h1>
-            <p className="text-xs tracking-widest text-zinc-400 mt-1">ELEVATE YOUR EVERYDAY.</p>
-          </div>
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <label className="text-xs text-zinc-400 block mb-1">Owner Email</label>
-              <input 
-                type="email" 
-                required
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-white focus:border-[#C0C0C0] outline-none text-sm"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-zinc-400 block mb-1">Password</label>
-              <input 
-                type="password" 
-                required
-                value={password} 
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-white focus:border-[#C0C0C0] outline-none text-sm"
-              />
-            </div>
-            <button 
-              type="submit"
-              className="w-full py-3 bg-[#C0C0C0] text-black font-semibold rounded-lg hover:bg-white transition-all text-sm tracking-wide"
-            >
-              {lang === 'bn' ? 'প্রবেশ করুন (Login)' : 'Secure Login'}
-            </button>
-          </form>
-        </div>
+  <!-- ================= AUTH / LOGIN SCREEN ================= -->
+  <div x-show="!isAuthenticated" class="min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-cardDark border border-zinc-800 rounded-2xl p-8 shadow-2xl space-y-6">
+      <div class="text-center">
+        <h1 class="text-3xl font-bold tracking-widest text-silverAccent">VYRO WEAR</h1>
+        <p class="text-[10px] tracking-widest text-zinc-400 mt-1 uppercase">Elevate Your Everyday.</p>
       </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-[#0B0B0C] text-[#F8F9FA] flex flex-col pb-20 md:pb-0 md:flex-row font-sans">
-      {/* Sidebar for Desktop */}
-      <aside className="hidden md:flex flex-col w-64 bg-[#141416] border-r border-zinc-800 p-6 sticky top-0 h-screen">
-        <div className="mb-8">
-          <h1 className="text-xl font-bold tracking-widest text-[#C0C0C0]">VYRO WEAR</h1>
-          <p className="text-[10px] tracking-wider text-zinc-400">ELEVATE YOUR EVERYDAY.</p>
+      
+      <form @submit.prevent="login()" class="space-y-4">
+        <div>
+          <label class="text-xs text-zinc-400 block mb-1">Owner Email</label>
+          <input type="email" x-model="loginEmail" required placeholder="owner@vyrowear.com" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-sm text-white focus:border-silverAccent outline-none">
         </div>
-        <nav className="space-y-1 flex-1 overflow-y-auto pr-2">
-          <NavItem icon={<LayoutDashboard size={18}/>} label={lang === 'bn' ? 'ড্যাশবোর্ড' : 'Dashboard'} active={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} />
-          <NavItem icon={<ShoppingBag size={18}/>} label={lang === 'bn' ? 'অর্ডারসমূহ' : 'Orders'} active={activeTab === 'orders'} onClick={() => setActiveTab('orders')} />
-          <NavItem icon={<Package size={18}/>} label={lang === 'bn' ? 'প্রোডাক্টস' : 'Products'} active={activeTab === 'products'} onClick={() => setActiveTab('products')} />
-          <NavItem icon={<Layers size={18}/>} label={lang === 'bn' ? 'ইনভেন্টরি' : 'Inventory'} active={activeTab === 'inventory'} onClick={() => setActiveTab('inventory')} />
-          <NavItem icon={<Users size={18}/>} label={lang === 'bn' ? 'গ্রাহক' : 'Customers'} active={activeTab === 'customers'} onClick={() => setActiveTab('customers')} />
-          <NavItem icon={<Receipt size={18}/>} label={lang === 'bn' ? 'খরচসমূহ' : 'Expenses'} active={activeTab === 'expenses'} onClick={() => setActiveTab('expenses')} />
-          <NavItem icon={<PieChart size={18}/>} label={lang === 'bn' ? 'লাভ ও ক্ষতি' : 'Profit & Loss'} active={activeTab === 'finance'} onClick={() => setActiveTab('finance')} />
-          <NavItem icon={<FileText size={18}/>} label={lang === 'bn' ? 'রিপোর্ট' : 'Reports'} active={activeTab === 'reports'} onClick={() => setActiveTab('reports')} />
-          <NavItem icon={<Settings size={18}/>} label={lang === 'bn' ? 'সেটিংস' : 'Settings'} active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} />
-        </nav>
-        <div className="pt-4 border-t border-zinc-800 flex items-center justify-between">
-          <button onClick={() => setLang(lang === 'bn' ? 'en' : 'bn')} className="flex items-center gap-2 text-xs text-zinc-400 hover:text-white">
-            <Globe size={14} /> {lang === 'bn' ? 'English' : 'বাংলা'}
-          </button>
-          <button onClick={() => setIsAuthenticated(false)} className="text-red-400 hover:text-red-300">
-            <LogOut size={16} />
-          </button>
+        <div>
+          <label class="text-xs text-zinc-400 block mb-1">Password</label>
+          <input type="password" x-model="loginPassword" required placeholder="••••••••" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-sm text-white focus:border-silverAccent outline-none">
         </div>
-      </aside>
+        <button type="submit" class="w-full py-3 bg-silverAccent text-black font-semibold rounded-xl hover:bg-white transition-all text-sm tracking-wide">
+          <span x-text="lang === 'bn' ? 'প্রবেশ করুন (Login)' : 'Secure Login'"></span>
+        </button>
+      </form>
+    </div>
+  </div>
 
-      {/* Main Content View */}
-      <main className="flex-1 p-4 md:p-8 overflow-y-auto">
-        <header className="flex justify-between items-center mb-6 pb-4 border-b border-zinc-800 md:hidden">
-          <div>
-            <h1 className="text-lg font-bold tracking-widest text-[#C0C0C0]">VYRO WEAR</h1>
-            <p className="text-[9px] text-zinc-400">ELEVATE YOUR EVERYDAY.</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <button onClick={() => setLang(lang === 'bn' ? 'en' : 'bn')} className="text-xs bg-zinc-800 px-2 py-1 rounded text-zinc-300">
-              {lang === 'bn' ? 'EN' : 'বাং'}
-            </button>
-            <button onClick={() => setIsAuthenticated(false)} className="text-red-400">
-              <LogOut size={18} />
-            </button>
-          </div>
-        </header>
-
-        {activeTab === 'dashboard' && <Dashboard products={products} orders={orders} expenses={expenses} lang={lang} />}
-        {activeTab === 'orders' && <Orders orders={orders} setOrders={setOrders} products={products} setProducts={setProducts} lang={lang} />}
-        {activeTab === 'products' && <Products products={products} setProducts={setProducts} lang={lang} />}
-        {activeTab === 'inventory' && <Inventory products={products} setProducts={setProducts} lang={lang} />}
-        {activeTab === 'customers' && <Customers orders={orders} lang={lang} />}
-        {activeTab === 'expenses' && <Expenses expenses={expenses} setExpenses={setExpenses} lang={lang} />}
-        {activeTab === 'finance' && <Finance orders={orders} expenses={expenses} lang={lang} />}
-        {activeTab === 'reports' && <Reports orders={orders} products={products} expenses={expenses} lang={lang} />}
-        {activeTab === 'settings' && <SettingsView lang={lang} setLang={setLang} />}
-      </main>
-
-      {/* Mobile Bottom Navigation Bar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#141416] border-t border-zinc-800 flex justify-around py-3 px-2 z-50">
-        <MobileNavBtn icon={<LayoutDashboard size={20}/>} active={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} label="Home" />
-        <MobileNavBtn icon={<ShoppingBag size={20}/>} active={activeTab === 'orders'} onClick={() => setActiveTab('orders')} label="Orders" />
-        <MobileNavBtn icon={<Package size={20}/>} active={activeTab === 'products'} onClick={() => setActiveTab('products')} label="Products" />
-        <MobileNavBtn icon={<Layers size={20}/>} active={activeTab === 'inventory'} onClick={() => setActiveTab('inventory')} label="Stock" />
-        <MobileNavBtn icon={<PieChart size={20}/>} active={activeTab === 'finance'} onClick={() => setActiveTab('finance')} label="Profit" />
-        <MobileNavBtn icon={<Settings size={20}/>} active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} label="Settings" />
+  <!-- ================= MAIN BUSINESS APP ================= -->
+  <div x-show="isAuthenticated" class="min-h-screen flex flex-col md:flex-row">
+    
+    <!-- DESKTOP SIDEBAR -->
+    <aside class="hidden md:flex flex-col w-64 bg-cardDark border-r border-zinc-800 p-6 sticky top-0 h-screen">
+      <div class="mb-8">
+        <h1 class="text-xl font-bold tracking-widest text-silverAccent">VYRO WEAR</h1>
+        <p class="text-[9px] tracking-wider text-zinc-400 uppercase">Elevate Your Everyday.</p>
+      </div>
+      <nav class="space-y-1 flex-1 overflow-y-auto">
+        <template x-for="item in menuItems" :key="item.id">
+          <button @click="activeTab = item.id" 
+                  :class="activeTab === item.id ? 'bg-silverAccent text-black font-bold' : 'text-zinc-400 hover:bg-zinc-900 hover:text-white'" 
+                  class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs transition-all">
+            <i :class="item.icon" class="text-base"></i>
+            <span x-text="lang === 'bn' ? item.bn : item.en"></span>
+          </button>
+        </template>
       </nav>
-    </div>
-  );
-}
-
-function NavItem({ icon, label, active, onClick }) {
-  return (
-    <button 
-      onClick={onClick}
-      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${active ? 'bg-[#C0C0C0] text-black font-semibold' : 'text-zinc-400 hover:bg-zinc-900 hover:text-white'}`}
-    >
-      {icon}
-      <span>{label}</span>
-    </button>
-  );
-}
-
-function MobileNavBtn({ icon, active, onClick, label }) {
-  return (
-    <button onClick={onClick} className={`flex flex-col items-center gap-1 ${active ? 'text-[#C0C0C0]' : 'text-zinc-500'}`}>
-      {icon}
-      <span className="text-[10px]">{label}</span>
-    </button>
-  );
-}
-
-// --- SUB-VIEWS / COMPONENTS ---
-
-function Dashboard({ products, orders, expenses, lang }) {
-  const activeOrders = orders.filter(o => o.status !== 'Cancelled');
-  const totalSales = activeOrders.reduce((acc, o) => acc + Number(o.grandTotal || 0), 0);
-  const totalExpenses = expenses.reduce((acc, e) => acc + Number(e.amount || 0), 0);
-  const lowStockCount = products.filter(p => Number(p.stock) <= 5).length;
-
-  return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-bold text-[#C0C0C0]">
-        {lang === 'bn' ? 'বিজনেস ড্যাশবোর্ড' : 'Business Dashboard'}
-      </h2>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-[#141416] border border-zinc-800 rounded-2xl p-4">
-          <p className="text-xs text-zinc-400">{lang === 'bn' ? 'মোট বিক্রি' : 'Total Sales'}</p>
-          <h4 className="text-lg font-bold text-white mt-1">৳ {totalSales.toLocaleString()}</h4>
-        </div>
-        <div className="bg-[#141416] border border-zinc-800 rounded-2xl p-4">
-          <p className="text-xs text-zinc-400">{lang === 'bn' ? 'মোট খরচ' : 'Total Expenses'}</p>
-          <h4 className="text-lg font-bold text-white mt-1">৳ {totalExpenses.toLocaleString()}</h4>
-        </div>
-        <div className="bg-[#141416] border border-zinc-800 rounded-2xl p-4">
-          <p className="text-xs text-zinc-400">{lang === 'bn' ? 'মোট অর্ডার' : 'Total Orders'}</p>
-          <h4 className="text-lg font-bold text-white mt-1">{orders.length}</h4>
-        </div>
-        <div className={`bg-[#141416] border rounded-2xl p-4 ${lowStockCount > 0 ? 'border-red-500/50' : 'border-zinc-800'}`}>
-          <p className="text-xs text-zinc-400">{lang === 'bn' ? 'লো স্টক' : 'Low Stock'}</p>
-          <h4 className="text-lg font-bold text-white mt-1">{lowStockCount}</h4>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Orders({ orders, setOrders, products, lang }) {
-  const [showModal, setShowModal] = useState(false);
-  const [customerName, setCustomerName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [selectedProduct, setSelectedProduct] = useState('');
-  const [quantity, setQuantity] = useState(1);
-
-  const handleCreateOrder = (e) => {
-    e.preventDefault();
-    const prod = products.find(p => p.id === selectedProduct);
-    if (!prod) return;
-
-    const grandTotal = (prod.price * Number(quantity)) + 100; // 100 delivery
-    const newOrder = {
-      id: Date.now().toString(),
-      invoiceNo: Math.floor(100000 + Math.random() * 900000),
-      customerName,
-      phone,
-      productName: prod.name,
-      quantity: Number(quantity),
-      grandTotal,
-      status: 'Pending',
-      date: new Date().toLocaleDateString()
-    };
-
-    setOrders([newOrder, ...orders]);
-    setShowModal(false);
-    setCustomerName('');
-    setPhone('');
-  };
-
-  return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-[#C0C0C0]">{lang === 'bn' ? 'অর্ডারসমূহ' : 'Orders'}</h2>
-        <button onClick={() => setShowModal(true)} className="bg-[#C0C0C0] text-black font-semibold text-xs px-4 py-2.5 rounded-xl">
-          + {lang === 'bn' ? 'নতুন অর্ডার' : 'New Order'}
+      <div class="pt-4 border-t border-zinc-800 flex items-center justify-between">
+        <button @click="lang = lang === 'bn' ? 'en' : 'bn'" class="text-xs text-zinc-400 hover:text-white flex items-center gap-2">
+          <i class="fa-solid fa-globe"></i> <span x-text="lang === 'bn' ? 'English' : 'বাংলা'"></span>
+        </button>
+        <button @click="isAuthenticated = false" class="text-red-400 hover:text-red-300">
+          <i class="fa-solid fa-right-from-bracket"></i>
         </button>
       </div>
+    </aside>
 
-      <div className="space-y-3">
-        {orders.map(order => (
-          <div key={order.id} className="bg-[#141416] border border-zinc-800 rounded-2xl p-4 flex justify-between items-center">
-            <div>
-              <p className="text-sm font-bold text-white">#{order.invoiceNo} - {order.customerName}</p>
-              <p className="text-xs text-zinc-400">{order.productName} (Qty: {order.quantity}) | {order.phone}</p>
-            </div>
-            <div className="text-right">
-              <p className="text-sm font-bold text-[#C0C0C0]">৳ {order.grandTotal}</p>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-300">{order.status}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {showModal && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-          <div className="bg-[#141416] border border-zinc-800 rounded-2xl p-6 max-w-md w-full space-y-4">
-            <h3 className="text-lg font-bold text-[#C0C0C0]">{lang === 'bn' ? 'নতুন অর্ডার' : 'New Order'}</h3>
-            <form onSubmit={handleCreateOrder} className="space-y-3">
-              <input type="text" placeholder="Customer Name" required value={customerName} onChange={e => setCustomerName(e.target.value)} className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-xs text-white outline-none" />
-              <input type="text" placeholder="Phone Number" required value={phone} onChange={e => setPhone(e.target.value)} className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-xs text-white outline-none" />
-              <select value={selectedProduct} onChange={e => setSelectedProduct(e.target.value)} required className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-xs text-white outline-none">
-                <option value="">Select Product</option>
-                {products.map(p => (<option key={p.id} value={p.id}>{p.name} (৳ {p.price})</option>))}
-              </select>
-              <input type="number" min="1" value={quantity} onChange={e => setQuantity(e.target.value)} className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-xs text-white outline-none" />
-              <div className="flex gap-2 pt-2">
-                <button type="submit" className="flex-1 bg-[#C0C0C0] text-black font-semibold py-3 rounded-lg text-xs">Save</button>
-                <button type="button" onClick={() => setShowModal(false)} className="px-4 bg-zinc-800 text-zinc-300 rounded-lg text-xs">Cancel</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function Products({ products, setProducts, lang }) {
-  const [name, setName] = useState('');
-  const [price, setPrice] = useState('');
-  const [stock, setStock] = useState('');
-
-  const handleAdd = (e) => {
-    e.preventDefault();
-    const newProd = { id: Date.now().toString(), name, price: Number(price), stock: Number(stock), sku: 'VYRO-' + Math.floor(100 + Math.random()*900) };
-    setProducts([...products, newProd]);
-    setName(''); setPrice(''); setStock('');
-  };
-
-  return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-bold text-[#C0C0C0]">{lang === 'bn' ? 'প্রোডাক্ট ম্যানেজমেন্ট' : 'Products'}</h2>
-      <form onSubmit={handleAdd} className="bg-[#141416] border border-zinc-800 p-4 rounded-2xl grid grid-cols-1 md:grid-cols-4 gap-3">
-        <input type="text" placeholder="Product Name" required value={name} onChange={e => setName(e.target.value)} className="bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-xs text-white outline-none" />
-        <input type="number" placeholder="Price (BDT)" required value={price} onChange={e => setPrice(e.target.value)} className="bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-xs text-white outline-none" />
-        <input type="number" placeholder="Stock Qty" required value={stock} onChange={e => setStock(e.target.value)} className="bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-xs text-white outline-none" />
-        <button type="submit" className="bg-[#C0C0C0] text-black font-semibold rounded-lg text-xs py-3">Add Product</button>
-      </form>
-      <div className="space-y-3">
-        {products.map(p => (
-          <div key={p.id} className="bg-[#141416] border border-zinc-800 p-4 rounded-2xl flex justify-between items-center text-xs">
-            <div>
-              <p className="font-bold text-white text-sm">{p.name} ({p.sku})</p>
-              <p className="text-zinc-400">Stock: {p.stock} units</p>
-            </div>
-            <p className="font-bold text-[#C0C0C0]">৳ {p.price}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function Inventory({ products, lang }) {
-  return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-bold text-[#C0C0C0]">{lang === 'bn' ? 'ইনভেন্টরি ও স্টক' : 'Inventory Stock'}</h2>
-      <div className="space-y-3">
-        {products.map(p => (
-          <div key={p.id} className="bg-[#141416] border border-zinc-800 p-4 rounded-2xl flex justify-between items-center text-xs">
-            <span className="font-bold text-white">{p.name}</span>
-            <span className={`px-3 py-1 rounded-full font-bold ${p.stock <= 5 ? 'bg-red-500/20 text-red-400' : 'bg-zinc-900 text-[#C0C0C0]'}`}>
-              {p.stock} in stock
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function Customers({ orders, lang }) {
-  return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-bold text-[#C0C0C0]">{lang === 'bn' ? 'গ্রাহক তালিকা' : 'Customers'}</h2>
-      <div className="space-y-3">
-        {orders.map(o => (
-          <div key={o.id} className="bg-[#141416] border border-zinc-800 p-4 rounded-2xl text-xs space-y-1">
-            <p className="font-bold text-white text-sm">{o.customerName}</p>
-            <p className="text-zinc-400">Phone: {o.phone}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function Expenses({ expenses, setExpenses, lang }) {
-  const [desc, setDesc] = useState('');
-  const [amount, setAmount] = useState('');
-
-  const handleAdd = (e) => {
-    e.preventDefault();
-    setExpenses([{ id: Date.now().toString(), desc, amount: Number(amount) }, ...expenses]);
-    setDesc(''); setAmount('');
-  };
-
-  return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-bold text-[#C0C0C0]">{lang === 'bn' ? 'খরচ ব্যবস্থাপনা' : 'Expenses'}</h2>
-      <form onSubmit={handleAdd} className="bg-[#141416] border border-zinc-800 p-4 rounded-2xl grid grid-cols-1 md:grid-cols-3 gap-3">
-        <input type="text" placeholder="Expense Description" required value={desc} onChange={e => setDesc(e.target.value)} className="bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-xs text-white outline-none" />
-        <input type="number" placeholder="Amount (BDT)" required value={amount} onChange={e => setAmount(e.target.value)} className="bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-xs text-white outline-none" />
-        <button type="submit" className="bg-[#C0C0C0] text-black font-semibold rounded-lg text-xs py-3">Add Expense</button>
-      </form>
-      <div className="space-y-3">
-        {expenses.map(e => (
-          <div key={e.id} className="bg-[#141416] border border-zinc-800 p-4 rounded-2xl flex justify-between items-center text-xs">
-            <span className="text-white font-medium">{e.desc}</span>
-            <span className="text-red-400 font-bold">৳ {e.amount}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function Finance({ orders, expenses, lang }) {
-  const sales = orders.filter(o => o.status !== 'Cancelled').reduce((a, b) => a + Number(b.grandTotal || 0), 0);
-  const exp = expenses.reduce((a, b) => a + Number(b.amount || 0), 0);
-  const net = sales - exp;
-
-  return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-bold text-[#C0C0C0]">{lang === 'bn' ? 'লাভ ও ক্ষতি হিসাব' : 'Profit & Loss'}</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-[#141416] border border-zinc-800 p-5 rounded-2xl">
-          <p className="text-xs text-zinc-400">Gross Sales</p>
-          <h3 className="text-xl font-bold text-white mt-1">৳ {sales}</h3>
-        </div>
-        <div className="bg-[#141416] border border-zinc-800 p-5 rounded-2xl">
-          <p className="text-xs text-zinc-400">Total Expenses</p>
-          <h3 className="text-xl font-bold text-red-400 mt-1">৳ {exp}</h3>
-        </div>
-        <div className="bg-[#141416] border border-zinc-800 p-5 rounded-2xl">
-          <p className="text-xs text-zinc-400">Net Profit</p>
-          <h3 className={`text-xl font-bold mt-1 ${net >= 0 ? 'text-green-400' : 'text-red-400'}`}>৳ {net}</h3>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Reports({ orders, products, expenses, lang }) {
-  return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-bold text-[#C0C0C0]">{lang === 'bn' ? 'ব্যবসায়িক রিপোর্ট' : 'Reports'}</h2>
-      <div className="bg-[#141416] border border-zinc-800 p-5 rounded-2xl space-y-3 text-xs text-zinc-300">
-        <p>Total Products Recorded: <span className="text-white font-bold">{products.length}</span></p>
-        <p>Total Orders Logged: <span className="text-white font-bold">{orders.length}</span></p>
-        <p>Total Expense Records: <span className="text-white font-bold">{expenses.length}</span></p>
-      </div>
-    </div>
-  );
-}
-
-function SettingsView({ lang, setLang }) {
-  return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-bold text-[#C0C0C0]">{lang === 'bn' ? 'সেটিংস' : 'Settings'}</h2>
-      <div className="bg-[#141416] border border-zinc-800 p-5 rounded-2xl space-y-4 text-xs">
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 p-4 md:p-8 overflow-y-auto">
+      
+      <!-- MOBILE HEADER -->
+      <header class="flex justify-between items-center mb-6 pb-4 border-b border-zinc-800 md:hidden">
         <div>
-          <label className="text-zinc-400 block mb-1">Language / ভাষা</label>
-          <button onClick={() => setLang(lang === 'bn' ? 'en' : 'bn')} className="bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-lg text-white">
-            {lang === 'bn' ? 'Switch to English' : 'বাংলায় পরিবর্তন করুন'}
+          <h1 class="text-lg font-bold tracking-widest text-silverAccent">VYRO WEAR</h1>
+          <p class="text-[8px] text-zinc-400 tracking-wider">ELEVATE YOUR EVERYDAY.</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button @click="lang = lang === 'bn' ? 'en' : 'bn'" class="text-xs bg-zinc-800 px-2 py-1 rounded text-zinc-300">
+            <span x-text="lang === 'bn' ? 'EN' : 'বাং'"></span>
+          </button>
+          <button @click="isAuthenticated = false" class="text-red-400">
+            <i class="fa-solid fa-right-from-bracket"></i>
           </button>
         </div>
+      </header>
+
+      <!-- 1. DASHBOARD TAB -->
+      <div x-show="activeTab === 'dashboard'" class="space-y-6">
+        <h2 class="text-xl font-bold text-silverAccent" x-text="lang === 'bn' ? 'বিজনেস ড্যাশবোর্ড' : 'Business Dashboard'"></h2>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-cardDark border border-zinc-800 rounded-2xl p-4">
+            <p class="text-xs text-zinc-400" x-text="lang === 'bn' ? 'মোট বিক্রি' : 'Total Sales'"></p>
+            <h4 class="text-lg font-bold text-white mt-1">৳ <span x-text="getTotalSales().toLocaleString()"></span></h4>
+          </div>
+          <div class="bg-cardDark border border-zinc-800 rounded-2xl p-4">
+            <p class="text-xs text-zinc-400" x-text="lang === 'bn' ? 'মোট খরচ' : 'Total Expenses'"></p>
+            <h4 class="text-lg font-bold text-white mt-1">৳ <span x-text="getTotalExpenses().toLocaleString()"></span></h4>
+          </div>
+          <div class="bg-cardDark border border-zinc-800 rounded-2xl p-4">
+            <p class="text-xs text-zinc-400" x-text="lang === 'bn' ? 'মোট অর্ডার' : 'Total Orders'"></p>
+            <h4 class="text-lg font-bold text-white mt-1" x-text="orders.length"></h4>
+          </div>
+          <div class="bg-cardDark border rounded-2xl p-4" :class="getLowStockCount() > 0 ? 'border-red-500/50' : 'border-zinc-800'">
+            <p class="text-xs text-zinc-400" x-text="lang === 'bn' ? 'লো স্টক অ্যালার্ট' : 'Low Stock Alert'"></p>
+            <h4 class="text-lg font-bold text-white mt-1" x-text="getLowStockCount()"></h4>
+          </div>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="bg-cardDark border border-zinc-800 rounded-2xl p-5 space-y-3">
+          <h3 class="text-sm font-semibold text-silverAccent" x-text="lang === 'bn' ? 'সাম্প্রতিক অর্ডারসমূহ' : 'Recent Orders'"></h3>
+          <template x-for="order in orders.slice(0, 5)" :key="order.id">
+            <div class="flex justify-between items-center bg-zinc-900/60 p-3 rounded-xl border border-zinc-800/80 text-xs">
+              <div>
+                <p class="font-bold text-white">#<span x-text="order.invoiceNo"></span> - <span x-text="order.customerName"></span></p>
+                <p class="text-zinc-400"><span x-text="order.productName"></span> (<span x-text="order.phone"></span>)</p>
+              </div>
+              <div class="text-right">
+                <p class="font-bold text-silverAccent">৳ <span x-text="order.grandTotal"></span></p>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-300" x-text="order.status"></span>
+              </div>
+            </div>
+          </template>
+        </div>
       </div>
+
+      <!-- 2. ORDERS TAB -->
+      <div x-show="activeTab === 'orders'" class="space-y-6">
+        <div class="flex justify-between items-center">
+          <h2 class="text-xl font-bold text-silverAccent" x-text="lang === 'bn' ? 'অর্ডার ম্যানেজমেন্ট' : 'Order Management'"></h2>
+          <button @click="showOrderModal = true" class="bg-silverAccent text-black font-semibold text-xs px-4 py-2.5 rounded-xl">
+            + <span x-text="lang === 'bn' ? 'নতুন অর্ডার' : 'New Order'"></span>
+          </button>
+        </div>
+
+        <div class="space-y-3">
+          <template x-for="order in orders" :key="order.id">
+            <div class="bg-cardDark border border-zinc-800 rounded-2xl p-4 flex justify-between items-center">
+              <div>
+                <p class="text-sm font-bold text-white">#<span x-text="order.invoiceNo"></span> - <span x-text="order.customerName"></span></p>
+                <p class="text-xs text-zinc-400"><span x-text="order.productName"></span> | Qty: <span x-text="order.quantity"></span> | <span x-text="order.phone"></span></p>
+              </div>
+              <div class="text-right space-y-1">
+                <p class="text-sm font-bold text-silverAccent">৳ <span x-text="order.grandTotal"></span></p>
+                <select x-model="order.status" @change="saveData()" class="bg-zinc-900 text-zinc-300 border border-zinc-800 text-[10px] px-2 py-1 rounded outline-none">
+                  <option value="Pending">Pending</option>
+                  <option value="Confirmed">Confirmed</option>
+                  <option value="Shipped">Shipped</option>
+                  <option value="Delivered">Delivered</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- 3. PRODUCTS TAB -->
+      <div x-show="activeTab === 'products'" class="space-y-6">
+        <h2 class="text-xl font-bold text-silverAccent" x-text="lang === 'bn' ? 'প্রোডাক্টস' : 'Products'"></h2>
+        <form @submit.prevent="addProduct()" class="bg-cardDark border border-zinc-800 p-4 rounded-2xl grid grid-cols-1 md:grid-cols-4 gap-3">
+          <input type="text" x-model="newProd.name" placeholder="Product Name" required class="bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs text-white outline-none">
+          <input type="number" x-model="newProd.price" placeholder="Selling Price (BDT)" required class="bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs text-white outline-none">
+          <input type="number" x-model="newProd.stock" placeholder="Stock Qty" required class="bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs text-white outline-none">
+          <button type="submit" class="bg-silverAccent text-black font-semibold rounded-xl text-xs py-3">Add Product</button>
+        </form>
+
+        <div class="space-y-3">
+          <template x-for="p in products" :key="p.id">
+            <div class="bg-cardDark border border-zinc-800 p-4 rounded-2xl flex justify-between items-center text-xs">
+              <div>
+                <p class="font-bold text-white text-sm" x-text="p.name"></p>
+                <p class="text-zinc-400">SKU: <span x-text="p.sku"></span> | Stock: <span x-text="p.stock"></span> pcs</p>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="font-bold text-silverAccent">৳ <span x-text="p.price"></span></span>
+                <button @click="deleteProduct(p.id)" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- 4. INVENTORY TAB -->
+      <div x-show="activeTab === 'inventory'" class="space-y-6">
+        <h2 class="text-xl font-bold text-silverAccent" x-text="lang === 'bn' ? 'ইনভентরি ট্র্যাকিং' : 'Inventory Tracking'"></h2>
+        <div class="space-y-3">
+          <template x-for="p in products" :key="p.id">
+            <div class="bg-cardDark border border-zinc-800 p-4 rounded-2xl flex justify-between items-center text-xs">
+              <span class="font-bold text-white" x-text="p.name"></span>
+              <span class="px-3 py-1 rounded-full font-bold" :class="p.stock <= 5 ? 'bg-red-500/20 text-red-400' : 'bg-zinc-900 text-silverAccent'">
+                <span x-text="p.stock"></span> in stock
+              </span>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- 5. EXPENSES TAB -->
+      <div x-show="activeTab === 'expenses'" class="space-y-6">
+        <h2 class="text-xl font-bold text-silverAccent" x-text="lang === 'bn' ? 'খরচসমূহ' : 'Expenses'"></h2>
+        <form @submit.prevent="addExpense()" class="bg-cardDark border border-zinc-800 p-4 rounded-2xl grid grid-cols-1 md:grid-cols-3 gap-3">
+          <input type="text" x-model="newExp.desc" placeholder="Expense Description" required class="bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs text-white outline-none">
+          <input type="number" x-model="newExp.amount" placeholder="Amount (BDT)" required class="bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs text-white outline-none">
+          <button type="submit" class="bg-silverAccent text-black font-semibold rounded-xl text-xs py-3">Record Expense</button>
+        </form>
+        <div class="space-y-3">
+          <template x-for="e in expenses" :key="e.id">
+            <div class="bg-cardDark border border-zinc-800 p-4 rounded-2xl flex justify-between items-center text-xs">
+              <span class="text-white font-medium" x-text="e.desc"></span>
+              <span class="text-red-400 font-bold">৳ <span x-text="e.amount"></span></span>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- 6. PROFIT & LOSS TAB -->
+      <div x-show="activeTab === 'finance'" class="space-y-6">
+        <h2 class="text-xl font-bold text-silverAccent" x-text="lang === 'bn' ? 'লাভ ও ক্ষতি হিসাব' : 'Profit & Loss'"></h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-cardDark border border-zinc-800 p-5 rounded-2xl">
+            <p class="text-xs text-zinc-400">Total Sales Revenue</p>
+            <h3 class="text-xl font-bold text-white mt-1">৳ <span x-text="getTotalSales().toLocaleString()"></span></h3>
+          </div>
+          <div class="bg-cardDark border border-zinc-800 p-5 rounded-2xl">
+            <p class="text-xs text-zinc-400">Total Operating Expenses</p>
+            <h3 class="text-xl font-bold text-red-400 mt-1">৳ <span x-text="getTotalExpenses().toLocaleString()"></span></h3>
+          </div>
+          <div class="bg-cardDark border border-zinc-800 p-5 rounded-2xl">
+            <p class="text-xs text-zinc-400">Net Business Profit</p>
+            <h3 class="text-xl font-bold mt-1" :class="getNetProfit() >= 0 ? 'text-green-400' : 'text-red-400'">৳ <span x-text="getNetProfit().toLocaleString()"></span></h3>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- MOBILE BOTTOM NAVBAR -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-cardDark border-t border-zinc-800 flex justify-around py-3 px-2 z-50">
+      <template x-for="item in menuItems.slice(0, 5)" :key="item.id">
+        <button @click="activeTab = item.id" :class="activeTab === item.id ? 'text-silverAccent' : 'text-zinc-500'" class="flex flex-col items-center gap-1">
+          <i :class="item.icon" class="text-base"></i>
+          <span class="text-[9px]" x-text="lang === 'bn' ? item.bn : item.en"></span>
+        </button>
+      </template>
+    </nav>
+  </div>
+
+  <!-- ORDER CREATION MODAL -->
+  <div x-show="showOrderModal" class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50" style="display: none;">
+    <div class="bg-cardDark border border-zinc-800 rounded-2xl p-6 max-w-md w-full space-y-4">
+      <h3 class="text-lg font-bold text-silverAccent" x-text="lang === 'bn' ? 'নতুন অর্ডার যোগ করুন' : 'Create New Order'"></h3>
+      <form @submit.prevent="createOrder()" class="space-y-3">
+        <input type="text" x-model="newOrder.customerName" placeholder="Customer Name" required class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs text-white outline-none">
+        <input type="text" x-model="newOrder.phone" placeholder="Phone Number" required class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs text-white outline-none">
+        <select x-model="newOrder.selectedProduct" required class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs text-white outline-none">
+          <option value="">Select Product</option>
+          <template x-for="p in products" :key="p.id">
+            <option :value="p.id" x-text="p.name + ' (৳ ' + p.price + ')'"></option>
+          </template>
+        </select>
+        <input type="number" x-model="newOrder.quantity" min="1" placeholder="Quantity" required class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs text-white outline-none">
+        <div class="flex gap-2 pt-2">
+          <button type="submit" class="flex-1 bg-silverAccent text-black font-semibold py-3 rounded-xl text-xs">Save Order</button>
+          <button type="button" @click="showOrderModal = false" class="px-4 bg-zinc-800 text-zinc-300 rounded-xl text-xs">Cancel</button>
+        </div>
+      </form>
     </div>
-  );
-}
+  </div>
+
+  <!-- ALPINE.JS ENGINE -->
+  <script>
+    function vyroApp() {
+      return {
+        isAuthenticated: false,
+        loginEmail: 'owner@vyrowear.com',
+        loginPassword: 'vyro',
+        activeTab: 'dashboard',
+        lang: 'bn',
+        showOrderModal: false,
+
+        menuItems: [
+          { id: 'dashboard', bn: 'ড্যাশবোর্ড', en: 'Dashboard', icon: 'fa-solid fa-chart-pie' },
+          { id: 'orders', bn: 'অর্ডারসমূহ', en: 'Orders', icon: 'fa-solid fa-bag-shopping' },
+          { id: 'products', bn: 'প্রোডাক্টস', en: 'Products', icon: 'fa-solid fa-box' },
+          { id: 'inventory', bn: 'ইনভেন্টরি', en: 'Inventory', icon: 'fa-solid fa-layer-group' },
+          { id: 'expenses', bn: 'খরচসমূহ', en: 'Expenses', icon: 'fa-solid fa-receipt' },
+          { id: 'finance', bn: 'লাভ-ক্ষতি', en: 'Profit & Loss', icon: 'fa-solid fa-[#C0C0C0] fa-scale-balanced' }
+        ],
+
+        products: [],
+        orders: [],
+        expenses: [],
+
+        newProd: { name: '', price: '', stock: '' },
+        newExp: { desc: '', amount: '' },
+        newOrder: { customerName: '', phone: '', selectedProduct: '', quantity: 1 },
+
+        initApp() {
+          const savedProducts = localStorage.getItem('vyro_products');
+          const savedOrders = localStorage.getItem('vyro_orders');
+          const savedExpenses = localStorage.getItem('vyro_expenses');
+
+          this.products = savedProducts ? JSON.parse(savedProducts) : [
+            { id: '1', name: 'Oversized Noir Hoodie', sku: 'VYRO-HD-01', price: 2490, stock: 12 }
+          ];
+          this.orders = savedOrders ? JSON.parse(savedOrders) : [];
+          this.expenses = savedExpenses ? JSON.parse(savedExpenses) : [];
+        },
+
+        login() {
+          if (this.loginEmail && this.loginPassword) {
+            this.isAuthenticated = true;
+          }
+        },
+
+        saveData() {
+          localStorage.setItem('vyro_products', JSON.stringify(this.products));
+          localStorage.setItem('vyro_orders', JSON.stringify(this.orders));
+          localStorage.setItem('vyro_expenses', JSON.stringify(this.expenses));
+        },
+
+        addProduct() {
+          this.products.push({
+            id: Date.now().toString(),
+            name: this.newProd.name,
+            sku: 'VYRO-' + Math.floor(100 + Math.random() * 900),
+            price: Number(this.newProd.price),
+            stock: Number(this.newProd.stock)
+          });
+          this.saveData();
+          this.newProd = { name: '', price: '', stock: '' };
+        },
+
+        deleteProduct(id) {
+          this.products = this.products.filter(p => p.id !== id);
+          this.saveData();
+        },
+
+        createOrder() {
+          const prod = this.products.find(p => p.id === this.newOrder.selectedProduct);
+          if (!prod) return;
+
+          const grandTotal = (prod.price * Number(this.newOrder.quantity)) + 100;
+          this.orders.unshift({
+            id: Date.now().toString(),
+            invoiceNo: Math.floor(100000 + Math.random() * 900000),
+            customerName: this.newOrder.customerName,
+            phone: this.newOrder.phone,
+            productName: prod.name,
+            quantity: Number(this.newOrder.quantity),
+            grandTotal: grandTotal,
+            status: 'Pending'
+          });
+
+          // Deduct stock
+          prod.stock = Math.max(0, prod.stock - Number(this.newOrder.quantity));
+
+          this.saveData();
+          this.showOrderModal = false;
+          this.newOrder = { customerName: '', phone: '', selectedProduct: '', quantity: 1 };
+        },
+
+        addExpense() {
+          this.expenses.unshift({
+            id: Date.now().toString(),
+            desc: this.newExp.desc,
+            amount: Number(this.newExp.amount)
+          });
+          this.saveData();
+          this.newExp = { desc: '', amount: '' };
+        },
+
+        getTotalSales() {
+          return this.orders.filter(o => o.status !== 'Cancelled').reduce((acc, o) => acc + Number(o.grandTotal || 0), 0);
+        },
+
+        getTotalExpenses() {
+          return this.expenses.reduce((acc, e) => acc + Number(e.amount || 0), 0);
+        },
+
+        getNetProfit() {
+          return this.getTotalSales() - this.getTotalExpenses();
+        },
+
+        getLowStockCount() {
+          return this.products.filter(p => Number(p.stock) <= 5).length;
+        }
+      }
+    }
+  </script>
+</body>
+</html>
