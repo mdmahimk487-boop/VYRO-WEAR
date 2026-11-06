@@ -37,105 +37,456 @@
             </div>
         </div>
         <div class="flex items-center space-x-2">
-            <span class="text-xs bg-emerald-600 text-white px-2 py-1 rounded-full font-medium">অনলাইন</span>
-            <button onclick="alert('নোটিফিকেশন সেন্টার')" class="p-2 text-gray-300 hover:text-white relative">
-                <i class="fa-solid fa-bell text-lg"></i>
-                <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-            </button>
+            <span class="text-xs bg-emerald-600 text-white px-2 py-1 rounded-full font-medium">প্রোডাকশন মোড</span>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <main class="flex-1 p-4 max-w-7xl mx-auto w-full pb-20">
-        <!-- Dashboard Welcome Banner -->
-        <div class="bg-gradient-to-r from-navy-800 to-navy-700 border border-navy-600 rounded-2xl p-5 mb-6 shadow-lg">
-            <h2 class="text-xl font-bold text-white mb-1">স্বাগতম, ওনার! 👋</h2>
-            <p class="text-sm text-gray-300">VYRO WEAR ব্র্যান্ডের আজকের রিয়েল-টাইম হিসাব নিচে দেওয়া হলো।</p>
+    <!-- Main Container (Dynamic Views) -->
+    <main class="flex-1 p-4 max-w-7xl mx-auto w-full pb-24">
+        
+        <!-- 1. HOME / DASHBOARD VIEW -->
+        <div id="view-home" class="view-section">
+            <div class="bg-gradient-to-r from-navy-800 to-navy-700 border border-navy-600 rounded-2xl p-5 mb-6 shadow-lg">
+                <h2 class="text-xl font-bold text-white mb-1">স্বাগতম, ওনার! 👋</h2>
+                <p class="text-sm text-gray-300">VYRO WEAR ব্র্যান্ডের আজকের রিয়েল-টাইম হিসাব নিচে দেওয়া হলো।</p>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl shadow">
+                    <p class="text-xs text-gray-400 mb-1">আজকের মোট বিক্রয়</p>
+                    <h3 id="stat-sales" class="text-xl font-bold text-emerald-400">৳ ০.০০</h3>
+                </div>
+                <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl shadow">
+                    <p class="text-xs text-gray-400 mb-1">আজকের অর্ডার</p>
+                    <h3 id="stat-orders" class="text-xl font-bold text-blue-400">০ টি</h3>
+                </div>
+                <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl shadow">
+                    <p class="text-xs text-gray-400 mb-1">আজকের খরচ</p>
+                    <h3 id="stat-expense" class="text-xl font-bold text-red-400">৳ ০.০০</h3>
+                </div>
+                <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl shadow">
+                    <p class="text-xs text-gray-400 mb-1">আজকের লাভ</p>
+                    <h3 id="stat-profit" class="text-xl font-bold text-amber-400">৳ ০.০০</h3>
+                </div>
+            </div>
+
+            <!-- Quick Navigation Modules -->
+            <div class="grid grid-cols-3 md:grid-cols-6 gap-3 mb-6">
+                <button onclick="switchView('pos')" class="bg-navy-800 hover:bg-navy-700 border border-navy-700 p-3 rounded-xl flex flex-col items-center text-center transition">
+                    <i class="fa-solid fa-cash-register text-emerald-400 text-xl mb-1"></i>
+                    <span class="text-xs font-medium">POS সেলস</span>
+                </button>
+                <button onclick="switchView('orders')" class="bg-navy-800 hover:bg-navy-700 border border-navy-700 p-3 rounded-xl flex flex-col items-center text-center transition">
+                    <i class="fa-solid fa-box-open text-blue-400 text-xl mb-1"></i>
+                    <span class="text-xs font-medium">অর্ডারস</span>
+                </button>
+                <button onclick="switchView('stock')" class="bg-navy-800 hover:bg-navy-700 border border-navy-700 p-3 rounded-xl flex flex-col items-center text-center transition">
+                    <i class="fa-solid fa-shirt text-purple-400 text-xl mb-1"></i>
+                    <span class="text-xs font-medium">পণ্য ও স্টক</span>
+                </button>
+                <button onclick="switchView('expense')" class="bg-navy-800 hover:bg-navy-700 border border-navy-700 p-3 rounded-xl flex flex-col items-center text-center transition">
+                    <i class="fa-solid fa-wallet text-red-400 text-xl mb-1"></i>
+                    <span class="text-xs font-medium">খরচসমূহ</span>
+                </button>
+                <button onclick="switchView('customers')" class="bg-navy-800 hover:bg-navy-700 border border-navy-700 p-3 rounded-xl flex flex-col items-center text-center transition">
+                    <i class="fa-solid fa-users text-amber-400 text-xl mb-1"></i>
+                    <span class="text-xs font-medium">কাস্টমার</span>
+                </button>
+                <button onclick="switchView('reports')" class="bg-navy-800 hover:bg-navy-700 border border-navy-700 p-3 rounded-xl flex flex-col items-center text-center transition">
+                    <i class="fa-solid fa-chart-line text-teal-400 text-xl mb-1"></i>
+                    <span class="text-xs font-medium">রিপোর্টস</span>
+                </button>
+            </div>
+
+            <!-- Recent Orders Section -->
+            <div class="bg-navy-800 border border-navy-700 rounded-xl p-4 shadow">
+                <h3 class="font-bold text-sm text-white mb-3">সাম্প্রতিক অর্ডারসমূহ</h3>
+                <div id="recent-orders-list" class="space-y-2">
+                    <p class="text-center text-gray-400 text-sm py-4">কোনো অর্ডার পাওয়া যায়নি।</p>
+                </div>
+            </div>
         </div>
 
-        <!-- Stats Grid -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl shadow">
-                <p class="text-xs text-gray-400 mb-1">আজকের মোট বিক্রয়</p>
-                <h3 class="text-xl font-bold text-emerald-400">৳ ০.০০</h3>
-            </div>
-            <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl shadow">
-                <p class="text-xs text-gray-400 mb-1">আজকের অর্ডার</p>
-                <h3 class="text-xl font-bold text-blue-400">০ টি</h3>
-            </div>
-            <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl shadow">
-                <p class="text-xs text-gray-400 mb-1">আজকের খরচ</p>
-                <h3 class="text-xl font-bold text-red-400">৳ ০.০০</h3>
-            </div>
-            <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl shadow">
-                <p class="text-xs text-gray-400 mb-1">আজকের লাভ</p>
-                <h3 class="text-xl font-bold text-amber-400">৳ ০.০০</h3>
+        <!-- 2. POS VIEW -->
+        <div id="view-pos" class="view-section hidden">
+            <h2 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-cash-register text-emerald-400 mr-2"></i> POS সেলস ও অর্ডার জেনারেটর</h2>
+            <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl space-y-4">
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">কাস্টমারের নাম</label>
+                    <input type="text" id="pos-customer" placeholder="যেমন: Rahim Ahmed" class="w-full bg-navy-900 border border-navy-600 rounded-lg p-2.5 text-sm text-white">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">মোবাইল নম্বর</label>
+                    <input type="text" id="pos-phone" placeholder="017xxxxxxxx" class="w-full bg-navy-900 border border-navy-600 rounded-lg p-2.5 text-sm text-white">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">প্রোডাক্ট সিলেক্ট করুন</label>
+                    <select id="pos-product" class="w-full bg-navy-900 border border-navy-600 rounded-lg p-2.5 text-sm text-white">
+                        <!-- Dynamically loaded -->
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">পরিমাণ (Quantity)</label>
+                        <input type="number" id="pos-qty" value="1" min="1" class="w-full bg-navy-900 border border-navy-600 rounded-lg p-2.5 text-sm text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">মূল্য (৳)</label>
+                        <input type="number" id="pos-price" placeholder="0" class="w-full bg-navy-900 border border-navy-600 rounded-lg p-2.5 text-sm text-white">
+                    </div>
+                </div>
+                <button onclick="completeSale()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-lg font-bold text-sm shadow">অর্ডার কনফার্ম ও স্টক আপডেট করুন</button>
             </div>
         </div>
 
-        <!-- Quick Navigation / Modules -->
-        <div class="grid grid-cols-3 md:grid-cols-6 gap-3 mb-6">
-            <button onclick="alert('POS সিস্টেম ওপেন হচ্ছে')" class="bg-navy-800 hover:bg-navy-700 border border-navy-700 p-3 rounded-xl flex flex-col items-center text-center transition">
-                <i class="fa-solid fa-cash-register text-emerald-400 text-xl mb-1"></i>
-                <span class="text-xs font-medium">POS সেলস</span>
-            </button>
-            <button onclick="alert('অর্ডার ম্যানেজমেন্ট')" class="bg-navy-800 hover:bg-navy-700 border border-navy-700 p-3 rounded-xl flex flex-col items-center text-center transition">
-                <i class="fa-solid fa-box-open text-blue-400 text-xl mb-1"></i>
-                <span class="text-xs font-medium">অর্ডারস</span>
-            </button>
-            <button onclick="alert('প্রোডাক্ট ও স্টক')" class="bg-navy-800 hover:bg-navy-700 border border-navy-700 p-3 rounded-xl flex flex-col items-center text-center transition">
-                <i class="fa-solid fa-shirt text-purple-400 text-xl mb-1"></i>
-                <span class="text-xs font-medium">পণ্য ও স্টক</span>
-            </button>
-            <button onclick="alert('খরচ ম্যানেজমেন্ট')" class="bg-navy-800 hover:bg-navy-700 border border-navy-700 p-3 rounded-xl flex flex-col items-center text-center transition">
-                <i class="fa-solid fa-wallet text-red-400 text-xl mb-1"></i>
-                <span class="text-xs font-medium">খরচসমূহ</span>
-            </button>
-            <button onclick="alert('কাস্টমার তালিকা')" class="bg-navy-800 hover:bg-navy-700 border border-navy-700 p-3 rounded-xl flex flex-col items-center text-center transition">
-                <i class="fa-solid fa-users text-amber-400 text-xl mb-1"></i>
-                <span class="text-xs font-medium">কাস্টমার</span>
-            </button>
-            <button onclick="alert('রিপোর্ট ও সেটিংস')" class="bg-navy-800 hover:bg-navy-700 border border-navy-700 p-3 rounded-xl flex flex-col items-center text-center transition">
-                <i class="fa-solid fa-chart-line text-teal-400 text-xl mb-1"></i>
-                <span class="text-xs font-medium">রিপোর্টস</span>
-            </button>
+        <!-- 3. ORDERS VIEW -->
+        <div id="view-orders" class="view-section hidden">
+            <h2 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-box-open text-blue-400 mr-2"></i> অর্ডার ট্র্যাকিং</h2>
+            <div id="orders-container" class="space-y-3">
+                <!-- Dynamic Orders -->
+            </div>
         </div>
 
-        <!-- Recent Orders Section -->
-        <div class="bg-navy-800 border border-navy-700 rounded-xl p-4 shadow">
-            <div class="flex justify-between items-center mb-3">
-                <h3 class="font-bold text-sm text-white">সাম্প্রতিক অর্ডারসমূহ</h3>
-                <span class="text-xs text-gray-400">সব দেখুন</span>
+        <!-- 4. STOCK VIEW -->
+        <div id="view-stock" class="view-section hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-bold text-white"><i class="fa-solid fa-shirt text-purple-400 mr-2"></i> পণ্য ও স্টক (ইন/আউট)</h2>
             </div>
-            <div class="text-center py-6 text-gray-400 text-sm">
-                <i class="fa-solid fa-box-archive text-3xl mb-2 text-gray-600"></i>
-                <p>কোনো অর্ডার পাওয়া যায়নি। নতুন সেল রেকর্ড করুন।</p>
+            <!-- Add Product Form -->
+            <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl mb-6 space-y-3">
+                <h3 class="text-sm font-bold text-purple-300">নতুন পণ্য যোগ করুন</h3>
+                <input type="text" id="prod-name" placeholder="প্রোডাক্ট নাম (যেমন: Oversized Hoodie)" class="w-full bg-navy-900 border border-navy-600 rounded-lg p-2 text-sm text-white">
+                <div class="grid grid-cols-3 gap-2">
+                    <input type="text" id="prod-size" placeholder="সাইজ (L/XL)" class="bg-navy-900 border border-navy-600 rounded-lg p-2 text-sm text-white">
+                    <input type="text" id="prod-color" placeholder="রঙ (Black)" class="bg-navy-900 border border-navy-600 rounded-lg p-2 text-sm text-white">
+                    <input type="number" id="prod-stock" placeholder="স্টক সংখ্যা" class="bg-navy-900 border border-navy-600 rounded-lg p-2 text-sm text-white">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="number" id="prod-buying-price" placeholder="ক্রয় মূল্য (৳)" class="bg-navy-900 border border-navy-600 rounded-lg p-2 text-sm text-white">
+                    <input type="number" id="prod-selling-price" placeholder="বিক্রয় মূল্য (৳)" class="bg-navy-900 border border-navy-600 rounded-lg p-2 text-sm text-white">
+                </div>
+                <button onclick="addNewProduct()" class="w-full bg-purple-600 hover:bg-purple-500 text-white py-2 rounded-lg text-sm font-medium">স্টকে পণ্য যুক্ত করুন</button>
+            </div>
+            <!-- Stock List -->
+            <div class="bg-navy-800 border border-navy-700 rounded-xl p-4">
+                <h3 class="text-sm font-bold text-white mb-3">বর্তমান স্টক তালিকা</h3>
+                <div id="stock-list-container" class="space-y-2">
+                    <!-- Dynamic Stock -->
+                </div>
             </div>
         </div>
+
+        <!-- 5. EXPENSE VIEW -->
+        <div id="view-expense" class="view-section hidden">
+            <h2 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-wallet text-red-400 mr-2"></i> খরচ ম্যানেজমেন্ট</h2>
+            <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl space-y-3 mb-6">
+                <input type="text" id="exp-title" placeholder="খাতের নাম (যেমন: কুরিয়ার চার্জ, অ্যাড কস্ট)" class="w-full bg-navy-900 border border-navy-600 rounded-lg p-2 text-sm text-white">
+                <input type="number" id="exp-amount" placeholder="টাকার পরিমাণ (৳)" class="w-full bg-navy-900 border border-navy-600 rounded-lg p-2 text-sm text-white">
+                <button onclick="addExpense()" class="w-full bg-red-600 hover:bg-red-500 text-white py-2 rounded-lg font-medium text-sm">খরচ সেভ করুন</button>
+            </div>
+            <div class="bg-navy-800 border border-navy-700 rounded-xl p-4">
+                <h3 class="text-sm font-bold text-white mb-3">সাম্প্রতিক খরচসমূহ</h3>
+                <div id="expense-list" class="space-y-2">
+                    <p class="text-center text-gray-400 text-sm py-4">কোনো খরচ এন্ট্রি করা হয়নি।</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. CUSTOMERS VIEW -->
+        <div id="view-customers" class="view-section hidden">
+            <h2 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-users text-amber-400 mr-2"></i> কাস্টমার ডাটাবেস</h2>
+            <div id="customers-list" class="space-y-2">
+                <p class="text-center text-gray-400 text-sm py-4">কোনো কাস্টমার নেই।</p>
+            </div>
+        </div>
+
+        <!-- 7. REPORTS VIEW -->
+        <div id="view-reports" class="view-section hidden">
+            <h2 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-chart-line text-teal-400 mr-2"></i> বিজনেস রিপোর্ট ও ডাটা ম্যানেজমেন্ট</h2>
+            <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl space-y-3">
+                <button onclick="exportData()" class="w-full text-left bg-navy-700 hover:bg-navy-600 p-3 rounded-lg text-sm font-medium flex items-center justify-between">
+                    <span>📥 ডাটা ব্যাকআপ ডাউনলোড (JSON)</span>
+                    <i class="fa-solid fa-download"></i>
+                </button>
+                <button onclick="clearAllData()" class="w-full text-left bg-red-900/40 hover:bg-red-900/60 border border-red-700 p-3 rounded-lg text-sm font-medium text-red-300 flex items-center justify-between">
+                    <span>🗑️ সকল ডাটা রিসেট করুন</span>
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </div>
+        </div>
+
     </main>
 
     <!-- Bottom Navigation Bar for Mobile -->
     <nav class="bg-navy-800 border-t border-navy-700 fixed bottom-0 left-0 right-0 py-2 px-4 flex justify-between items-center z-50 shadow-lg">
-        <button class="flex flex-col items-center text-emerald-400">
+        <button onclick="switchView('home')" id="nav-home" class="flex flex-col items-center text-emerald-400 nav-btn">
             <i class="fa-solid fa-house text-lg"></i>
             <span class="text-[10px]">হোম</span>
         </button>
-        <button class="flex flex-col items-center text-gray-400 hover:text-white">
+        <button onclick="switchView('pos')" id="nav-pos" class="flex flex-col items-center text-gray-400 hover:text-white nav-btn">
             <i class="fa-solid fa-cash-register text-lg"></i>
             <span class="text-[10px]">POS</span>
         </button>
-        <button class="flex flex-col items-center text-gray-400 hover:text-white">
+        <button onclick="switchView('orders')" id="nav-orders" class="flex flex-col items-center text-gray-400 hover:text-white nav-btn">
             <i class="fa-solid fa-box-open text-lg"></i>
             <span class="text-[10px]">অর্ডার</span>
         </button>
-        <button class="flex flex-col items-center text-gray-400 hover:text-white">
+        <button onclick="switchView('stock')" id="nav-stock" class="flex flex-col items-center text-gray-400 hover:text-white nav-btn">
             <i class="fa-solid fa-shirt text-lg"></i>
             <span class="text-[10px]">স্টক</span>
         </button>
-        <button class="flex flex-col items-center text-gray-400 hover:text-white">
+        <button onclick="switchView('reports')" id="nav-reports" class="flex flex-col items-center text-gray-400 hover:text-white nav-btn">
             <i class="fa-solid fa-bars text-lg"></i>
             <span class="text-[10px]">মেনু</span>
         </button>
     </nav>
+
+    <!-- App JavaScript Logic -->
+    <script>
+        // Database State Initialization
+        let products = JSON.parse(localStorage.getItem('vyro_products')) || [];
+        let orders = JSON.parse(localStorage.getItem('vyro_orders')) || [];
+        let expenses = JSON.parse(localStorage.getItem('vyro_expenses')) || [];
+
+        function saveData() {
+            localStorage.setItem('vyro_products', JSON.stringify(products));
+            localStorage.setItem('vyro_orders', JSON.stringify(orders));
+            localStorage.setItem('vyro_expenses', JSON.stringify(expenses));
+            updateDashboard();
+        }
+
+        function switchView(viewName) {
+            document.querySelectorAll('.view-section').forEach(v => v.classList.add('hidden'));
+            const target = document.getElementById('view-' + viewName);
+            if (target) target.classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.replace('text-emerald-400', 'text-gray-400'));
+            const activeNav = document.getElementById('nav-' + viewName);
+            if (activeNav) activeNav.classList.replace('text-gray-400', 'text-emerald-400');
+
+            if(viewName === 'pos') loadPOSProducts();
+            if(viewName === 'stock') renderStock();
+            if(viewName === 'orders') renderOrders();
+            if(viewName === 'expense') renderExpenses();
+            if(viewName === 'customers') renderCustomers();
+
+            window.scrollTo(0, 0);
+        }
+
+        // Add Product (Stock In)
+        function addNewProduct() {
+            const name = document.getElementById('prod-name').value;
+            const size = document.getElementById('prod-size').value;
+            const color = document.getElementById('prod-color').value;
+            const stock = parseInt(document.getElementById('prod-stock').value);
+            const buyingPrice = parseFloat(document.getElementById('prod-buying-price').value);
+            const sellingPrice = parseFloat(document.getElementById('prod-selling-price').value);
+
+            if(!name || isNaN(stock) || isNaN(sellingPrice)) {
+                alert('দয়া করে সঠিক তথ্য দিন!');
+                return;
+            }
+
+            products.push({ id: Date.now(), name, size, color, stock, buyingPrice, sellingPrice });
+            saveData();
+            renderStock();
+            alert('পণ্য সফলভাবে স্টকে যুক্ত হয়েছে!');
+            document.getElementById('prod-name').value = '';
+            document.getElementById('prod-size').value = '';
+            document.getElementById('prod-color').value = '';
+            document.getElementById('prod-stock').value = '';
+            document.getElementById('prod-buying-price').value = '';
+            document.getElementById('prod-selling-price').value = '';
+        }
+
+        function renderStock() {
+            const container = document.getElementById('stock-list-container');
+            if(products.length === 0) {
+                container.innerHTML = `<p class="text-center text-gray-400 text-sm py-4">স্টকে কোনো প্রোডাক্ট নেই।</p>`;
+                return;
+            }
+            container.innerHTML = products.map(p => `
+                <div class="bg-navy-900 border border-navy-700 p-3 rounded-lg flex justify-between items-center text-sm">
+                    <div>
+                        <p class="font-bold text-white">${p.name} (${p.size || 'Free'}, ${p.color || 'N/A'})</p>
+                        <p class="text-xs text-gray-400">মূল্য: ৳${p.sellingPrice} | স্টক: <span class="text-emerald-400 font-bold">${p.stock} টি</span></p>
+                    </div>
+                    <button onclick="deleteProduct(${p.id})" class="text-red-400 hover:text-red-300 text-xs px-2 py-1 bg-red-900/30 rounded"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function deleteProduct(id) {
+            products = products.filter(p => p.id !== id);
+            saveData();
+            renderStock();
+        }
+
+        function loadPOSProducts() {
+            const select = document.getElementById('pos-product');
+            if(products.length === 0) {
+                select.innerHTML = `<option>আগে স্টক পণ্য যোগ করুন</option>`;
+                return;
+            }
+            select.innerHTML = products.map(p => `
+                <option value="${p.id}">${p.name} - ${p.size} - ${p.color} (স্টক: ${p.stock}) [৳${p.sellingPrice}]</option>
+            `).join('');
+        }
+
+        // Complete Sale / Order Generation & Stock Out
+        function completeSale() {
+            const customer = document.getElementById('pos-customer').value || 'Guest Customer';
+            const phone = document.getElementById('pos-phone').value || 'N/A';
+            const prodId = parseInt(document.getElementById('pos-product').value);
+            const qty = parseInt(document.getElementById('pos-qty').value) || 1;
+
+            const product = products.find(p => p.id === prodId);
+            if(!product) {
+                alert('দয়া করে সঠিক পণ্য সিলেক্ট করুন!');
+                return;
+            }
+
+            if(product.stock < qty) {
+                alert('স্টকে পর্যাপ্ত পণ্য নেই!');
+                return;
+            }
+
+            // Reduce Stock
+            product.stock -= qty;
+
+            const totalAmount = product.sellingPrice * qty;
+            const totalCost = (product.buyingPrice || 0) * qty;
+            const profit = totalAmount - totalCost;
+
+            const newOrder = {
+                id: 'VYRO-' + Math.floor(1000 + Math.random() * 9000),
+                customer,
+                phone,
+                item: `${product.name} (${product.size}, ${product.color}) x ${qty}`,
+                amount: totalAmount,
+                profit,
+                date: new Date().toLocaleDateString()
+            };
+
+            orders.unshift(newOrder);
+            saveData();
+            alert('অর্ডার সফলভাবে সম্পন্ন হয়েছে ও স্টক আপডেট হয়েছে!');
+            switchView('home');
+        }
+
+        function renderOrders() {
+            const container = document.getElementById('orders-container');
+            if(orders.length === 0) {
+                container.innerHTML = `<div class="bg-navy-800 border border-navy-700 p-6 rounded-xl text-center text-gray-400 text-sm">কোনো অর্ডার নেই।</div>`;
+                return;
+            }
+            container.innerHTML = orders.map(o => `
+                <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl flex justify-between items-center text-sm">
+                    <div>
+                        <p class="font-bold text-white">অর্ডার ID: ${o.id} (${o.customer})</p>
+                        <p class="text-xs text-gray-400">পণ্য: ${o.item}</p>
+                        <p class="text-xs text-emerald-400 mt-1">টাকা: ৳${o.amount} | লাভ: ৳${o.profit}</p>
+                    </div>
+                    <span class="text-xs bg-emerald-600/30 text-emerald-400 px-2.5 py-1 rounded-full font-medium">সম্পন্ন</span>
+                </div>
+            `).join('');
+        }
+
+        // Expense Management
+        function addExpense() {
+            const title = document.getElementById('exp-title').value;
+            const amount = parseFloat(document.getElementById('exp-amount').value);
+
+            if(!title || isNaN(amount)) {
+                alert('খাতের নাম ও পরিমাণ সঠিকভাবে লিখুন!');
+                return;
+            }
+
+            expenses.push({ title, amount, date: new Date().toLocaleDateString() });
+            saveData();
+            renderExpenses();
+            alert('খরচ সফলভাবে যুক্ত হয়েছে!');
+            document.getElementById('exp-title').value = '';
+            document.getElementById('exp-amount').value = '';
+        }
+
+        function renderExpenses() {
+            const container = document.getElementById('expense-list');
+            if(expenses.length === 0) {
+                container.innerHTML = `<p class="text-center text-gray-400 text-sm py-4">কোনো খরচ নেই।</p>`;
+                return;
+            }
+            container.innerHTML = expenses.map(e => `
+                <div class="bg-navy-900 border border-navy-700 p-3 rounded-lg flex justify-between items-center text-sm">
+                    <span class="text-gray-200">${e.title}</span>
+                    <span class="text-red-400 font-bold">৳${e.amount}</span>
+                </div>
+            `).join('');
+        }
+
+        // Customers List
+        function renderCustomers() {
+            const container = document.getElementById('customers-list');
+            if(orders.length === 0) {
+                container.innerHTML = `<p class="text-center text-gray-400 text-sm py-4">কোনো কাস্টমার ডাটা নেই।</p>`;
+                return;
+            }
+            const uniqueCustomers = [...new Map(orders.map(o => [o.phone, o])).values()];
+            container.innerHTML = uniqueCustomers.map(c => `
+                <div class="bg-navy-800 border border-navy-700 p-3 rounded-lg text-sm">
+                    <p class="font-bold text-white">${c.customer}</p>
+                    <p class="text-xs text-gray-400">মোবাইল: ${c.phone}</p>
+                </div>
+            `).join('');
+        }
+
+        // Dashboard Summary Calculations
+        function updateDashboard() {
+            const totalSales = orders.reduce((sum, o) => sum + o.amount, 0);
+            const totalProfit = orders.reduce((sum, o) => sum + o.profit, 0);
+            const totalExpense = expenses.reduce((sum, e) => sum + e.amount, 0);
+            const netProfit = totalProfit - totalExpense;
+
+            document.getElementById('stat-sales').innerText = `৳ ${totalSales}`;
+            document.getElementById('stat-orders').innerText = `${orders.length} টি`;
+            document.getElementById('stat-expense').innerText = `৳ ${totalExpense}`;
+            document.getElementById('stat-profit').innerText = `৳ ${netProfit}`;
+
+            const recentContainer = document.getElementById('recent-orders-list');
+            if(orders.length === 0) {
+                recentContainer.innerHTML = `<p class="text-center text-gray-400 text-sm py-4">কোনো অর্ডার পাওয়া যায়নি।</p>`;
+            } else {
+                recentContainer.innerHTML = orders.slice(0, 3).map(o => `
+                    <div class="bg-navy-900 border border-navy-700 p-2.5 rounded-lg flex justify-between text-xs">
+                        <span class="text-white font-medium">${o.customer} (${o.item})</span>
+                        <span class="text-emerald-400 font-bold">৳${o.amount}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function exportData() {
+            const data = { products, orders, expenses };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'vyro-wear-backup.json';
+            a.click();
+        }
+
+        function clearAllData() {
+            if(confirm('সব ডাটা মুছে ফেলতে চান?')) {
+                localStorage.clear();
+                products = []; orders = []; expenses = [];
+                saveData();
+                location.reload();
+            }
+        }
+
+        // Initial Load
+        updateDashboard();
+    </script>
 </body>
 </html>
