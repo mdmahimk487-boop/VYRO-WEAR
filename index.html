@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VYRO WEAR — Business Management System</title>
+  <title>VYRO WEAR — Complete Business Management System</title>
   
-  <!-- Tailwind CSS CDN -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Alpine.js (Lightweight Reactive Framework for HTML) -->
+  <!-- Alpine.js for Reactive State Management -->
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -40,45 +40,45 @@
 </head>
 <body x-data="vyroApp()" x-init="initApp()" class="min-h-screen bg-obsidian text-zinc-100 pb-20 md:pb-0">
 
-  <!-- ================= AUTH / LOGIN SCREEN ================= -->
+  <!-- ================= 1. AUTHENTICATION SCREEN ================= -->
   <div x-show="!isAuthenticated" class="min-h-screen flex items-center justify-center p-4">
-    <div class="max-w-md w-full bg-cardDark border border-zinc-800 rounded-2xl p-8 shadow-2xl space-y-6">
-      <div class="text-center">
-        <h1 class="text-3xl font-bold tracking-widest text-silverAccent">VYRO WEAR</h1>
-        <p class="text-[10px] tracking-widest text-zinc-400 mt-1 uppercase">Elevate Your Everyday.</p>
+    <div class="max-w-md w-full bg-cardDark border border-zinc-800 rounded-3xl p-8 shadow-2xl space-y-6">
+      <div class="text-center space-y-1">
+        <h1 class="text-3xl font-black tracking-widest text-silverAccent">VYRO WEAR</h1>
+        <p class="text-[10px] tracking-widest text-zinc-400 uppercase">ELEVATE YOUR EVERYDAY.</p>
       </div>
       
       <form @submit.prevent="login()" class="space-y-4">
         <div>
           <label class="text-xs text-zinc-400 block mb-1">Owner Email</label>
-          <input type="email" x-model="loginEmail" required placeholder="owner@vyrowear.com" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-sm text-white focus:border-silverAccent outline-none">
+          <input type="email" x-model="loginEmail" required class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-sm text-white focus:border-silverAccent outline-none">
         </div>
         <div>
           <label class="text-xs text-zinc-400 block mb-1">Password</label>
-          <input type="password" x-model="loginPassword" required placeholder="••••••••" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-sm text-white focus:border-silverAccent outline-none">
+          <input type="password" x-model="loginPassword" required class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-sm text-white focus:border-silverAccent outline-none">
         </div>
-        <button type="submit" class="w-full py-3 bg-silverAccent text-black font-semibold rounded-xl hover:bg-white transition-all text-sm tracking-wide">
+        <button type="submit" class="w-full py-3.5 bg-silverAccent text-black font-bold rounded-xl hover:bg-white transition-all text-sm tracking-wide shadow-lg">
           <span x-text="lang === 'bn' ? 'প্রবেশ করুন (Login)' : 'Secure Login'"></span>
         </button>
       </form>
     </div>
   </div>
 
-  <!-- ================= MAIN BUSINESS APP ================= -->
-  <div x-show="isAuthenticated" class="min-h-screen flex flex-col md:flex-row">
+  <!-- ================= 2. MAIN APPLICATION ================= -->
+  <div x-show="isAuthenticated" class="min-h-screen flex flex-col md:flex-row" style="display: none;">
     
     <!-- DESKTOP SIDEBAR -->
-    <aside class="hidden md:flex flex-col w-64 bg-cardDark border-r border-zinc-800 p-6 sticky top-0 h-screen">
+    <aside class="hidden md:flex flex-col w-64 bg-cardDark border-r border-zinc-800 p-6 sticky top-0 h-screen shadow-2xl">
       <div class="mb-8">
         <h1 class="text-xl font-bold tracking-widest text-silverAccent">VYRO WEAR</h1>
-        <p class="text-[9px] tracking-wider text-zinc-400 uppercase">Elevate Your Everyday.</p>
+        <p class="text-[9px] tracking-wider text-zinc-400 uppercase">ELEVATE YOUR EVERYDAY.</p>
       </div>
-      <nav class="space-y-1 flex-1 overflow-y-auto">
+      <nav class="space-y-1.5 flex-1 overflow-y-auto pr-1">
         <template x-for="item in menuItems" :key="item.id">
           <button @click="activeTab = item.id" 
-                  :class="activeTab === item.id ? 'bg-silverAccent text-black font-bold' : 'text-zinc-400 hover:bg-zinc-900 hover:text-white'" 
+                  :class="activeTab === item.id ? 'bg-silverAccent text-black font-bold shadow-md' : 'text-zinc-400 hover:bg-zinc-900 hover:text-white'" 
                   class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs transition-all">
-            <i :class="item.icon" class="text-base"></i>
+            <i :class="item.icon" class="text-base w-5"></i>
             <span x-text="lang === 'bn' ? item.bn : item.en"></span>
           </button>
         </template>
@@ -87,93 +87,93 @@
         <button @click="lang = lang === 'bn' ? 'en' : 'bn'" class="text-xs text-zinc-400 hover:text-white flex items-center gap-2">
           <i class="fa-solid fa-globe"></i> <span x-text="lang === 'bn' ? 'English' : 'বাংলা'"></span>
         </button>
-        <button @click="isAuthenticated = false" class="text-red-400 hover:text-red-300">
+        <button @click="isAuthenticated = false" class="text-red-400 hover:text-red-300 p-2">
           <i class="fa-solid fa-right-from-bracket"></i>
         </button>
       </div>
     </aside>
 
-    <!-- MAIN CONTENT AREA -->
+    <!-- CONTENT BODY -->
     <main class="flex-1 p-4 md:p-8 overflow-y-auto">
       
       <!-- MOBILE HEADER -->
       <header class="flex justify-between items-center mb-6 pb-4 border-b border-zinc-800 md:hidden">
         <div>
           <h1 class="text-lg font-bold tracking-widest text-silverAccent">VYRO WEAR</h1>
-          <p class="text-[8px] text-zinc-400 tracking-wider">ELEVATE YOUR EVERYDAY.</p>
+          <p class="text-[8px] text-zinc-400 tracking-wider uppercase">ELEVATE YOUR EVERYDAY.</p>
         </div>
         <div class="flex items-center gap-3">
-          <button @click="lang = lang === 'bn' ? 'en' : 'bn'" class="text-xs bg-zinc-800 px-2 py-1 rounded text-zinc-300">
+          <button @click="lang = lang === 'bn' ? 'en' : 'bn'" class="text-xs bg-zinc-800 px-2.5 py-1.5 rounded-lg text-zinc-300 font-medium">
             <span x-text="lang === 'bn' ? 'EN' : 'বাং'"></span>
           </button>
-          <button @click="isAuthenticated = false" class="text-red-400">
-            <i class="fa-solid fa-right-from-bracket"></i>
+          <button @click="isAuthenticated = false" class="text-red-400 p-1">
+            <i class="fa-solid fa-right-from-bracket text-base"></i>
           </button>
         </div>
       </header>
 
-      <!-- 1. DASHBOARD TAB -->
+      <!-- TAB 1: DASHBOARD -->
       <div x-show="activeTab === 'dashboard'" class="space-y-6">
         <h2 class="text-xl font-bold text-silverAccent" x-text="lang === 'bn' ? 'বিজনেস ড্যাশবোর্ড' : 'Business Dashboard'"></h2>
         
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="bg-cardDark border border-zinc-800 rounded-2xl p-4">
+          <div class="bg-cardDark border border-zinc-800 rounded-2xl p-4 shadow-sm">
             <p class="text-xs text-zinc-400" x-text="lang === 'bn' ? 'মোট বিক্রি' : 'Total Sales'"></p>
             <h4 class="text-lg font-bold text-white mt-1">৳ <span x-text="getTotalSales().toLocaleString()"></span></h4>
           </div>
-          <div class="bg-cardDark border border-zinc-800 rounded-2xl p-4">
+          <div class="bg-cardDark border border-zinc-800 rounded-2xl p-4 shadow-sm">
             <p class="text-xs text-zinc-400" x-text="lang === 'bn' ? 'মোট খরচ' : 'Total Expenses'"></p>
             <h4 class="text-lg font-bold text-white mt-1">৳ <span x-text="getTotalExpenses().toLocaleString()"></span></h4>
           </div>
-          <div class="bg-cardDark border border-zinc-800 rounded-2xl p-4">
+          <div class="bg-cardDark border border-zinc-800 rounded-2xl p-4 shadow-sm">
             <p class="text-xs text-zinc-400" x-text="lang === 'bn' ? 'মোট অর্ডার' : 'Total Orders'"></p>
             <h4 class="text-lg font-bold text-white mt-1" x-text="orders.length"></h4>
           </div>
-          <div class="bg-cardDark border rounded-2xl p-4" :class="getLowStockCount() > 0 ? 'border-red-500/50' : 'border-zinc-800'">
-            <p class="text-xs text-zinc-400" x-text="lang === 'bn' ? 'লো স্টক অ্যালার্ট' : 'Low Stock Alert'"></p>
+          <div class="bg-cardDark border rounded-2xl p-4 shadow-sm" :class="getLowStockCount() > 0 ? 'border-red-500/50' : 'border-zinc-800'">
+            <p class="text-xs text-zinc-400" x-text="lang === 'bn' ? 'লো স্টক' : 'Low Stock'"></p>
             <h4 class="text-lg font-bold text-white mt-1" x-text="getLowStockCount()"></h4>
           </div>
         </div>
 
-        <!-- Recent Orders -->
         <div class="bg-cardDark border border-zinc-800 rounded-2xl p-5 space-y-3">
           <h3 class="text-sm font-semibold text-silverAccent" x-text="lang === 'bn' ? 'সাম্প্রতিক অর্ডারসমূহ' : 'Recent Orders'"></h3>
           <template x-for="order in orders.slice(0, 5)" :key="order.id">
-            <div class="flex justify-between items-center bg-zinc-900/60 p-3 rounded-xl border border-zinc-800/80 text-xs">
+            <div class="flex justify-between items-center bg-zinc-900/60 p-3 rounded-xl border border-zinc-800 text-xs">
               <div>
                 <p class="font-bold text-white">#<span x-text="order.invoiceNo"></span> - <span x-text="order.customerName"></span></p>
                 <p class="text-zinc-400"><span x-text="order.productName"></span> (<span x-text="order.phone"></span>)</p>
               </div>
               <div class="text-right">
                 <p class="font-bold text-silverAccent">৳ <span x-text="order.grandTotal"></span></p>
-                <span class="text-[10px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-300" x-text="order.status"></span>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 font-medium" x-text="order.status"></span>
               </div>
             </div>
           </template>
         </div>
       </div>
 
-      <!-- 2. ORDERS TAB -->
-      <div x-show="activeTab === 'orders'" class="space-y-6">
+      <!-- TAB 2: ORDERS -->
+      <div x-show="activeTab === 'orders'" class="space-y-6" style="display: none;">
         <div class="flex justify-between items-center">
           <h2 class="text-xl font-bold text-silverAccent" x-text="lang === 'bn' ? 'অর্ডার ম্যানেজমেন্ট' : 'Order Management'"></h2>
-          <button @click="showOrderModal = true" class="bg-silverAccent text-black font-semibold text-xs px-4 py-2.5 rounded-xl">
+          <button @click="showOrderModal = true" class="bg-silverAccent text-black font-bold text-xs px-4 py-2.5 rounded-xl hover:bg-white transition-all">
             + <span x-text="lang === 'bn' ? 'নতুন অর্ডার' : 'New Order'"></span>
           </button>
         </div>
 
         <div class="space-y-3">
           <template x-for="order in orders" :key="order.id">
-            <div class="bg-cardDark border border-zinc-800 rounded-2xl p-4 flex justify-between items-center">
+            <div class="bg-cardDark border border-zinc-800 rounded-2xl p-4 flex justify-between items-center text-xs">
               <div>
-                <p class="text-sm font-bold text-white">#<span x-text="order.invoiceNo"></span> - <span x-text="order.customerName"></span></p>
-                <p class="text-xs text-zinc-400"><span x-text="order.productName"></span> | Qty: <span x-text="order.quantity"></span> | <span x-text="order.phone"></span></p>
+                <p class="font-bold text-white text-sm">#<span x-text="order.invoiceNo"></span> - <span x-text="order.customerName"></span></p>
+                <p class="text-zinc-400"><span x-text="order.productName"></span> | Qty: <span x-text="order.quantity"></span> | <span x-text="order.phone"></span></p>
               </div>
               <div class="text-right space-y-1">
                 <p class="text-sm font-bold text-silverAccent">৳ <span x-text="order.grandTotal"></span></p>
-                <select x-model="order.status" @change="saveData()" class="bg-zinc-900 text-zinc-300 border border-zinc-800 text-[10px] px-2 py-1 rounded outline-none">
+                <select x-model="order.status" @change="saveData()" class="bg-zinc-900 text-zinc-300 border border-zinc-800 text-[10px] px-2 py-1 rounded-lg outline-none">
                   <option value="Pending">Pending</option>
                   <option value="Confirmed">Confirmed</option>
+                  <option value="Processing">Processing</option>
                   <option value="Shipped">Shipped</option>
                   <option value="Delivered">Delivered</option>
                   <option value="Cancelled">Cancelled</option>
@@ -184,14 +184,14 @@
         </div>
       </div>
 
-      <!-- 3. PRODUCTS TAB -->
-      <div x-show="activeTab === 'products'" class="space-y-6">
-        <h2 class="text-xl font-bold text-silverAccent" x-text="lang === 'bn' ? 'প্রোডাক্টস' : 'Products'"></h2>
+      <!-- TAB 3: PRODUCTS -->
+      <div x-show="activeTab === 'products'" class="space-y-6" style="display: none;">
+        <h2 class="text-xl font-bold text-silverAccent" x-text="lang === 'bn' ? 'প্রোডাক্ট ম্যানেজমেন্ট' : 'Product Management'"></h2>
         <form @submit.prevent="addProduct()" class="bg-cardDark border border-zinc-800 p-4 rounded-2xl grid grid-cols-1 md:grid-cols-4 gap-3">
           <input type="text" x-model="newProd.name" placeholder="Product Name" required class="bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs text-white outline-none">
           <input type="number" x-model="newProd.price" placeholder="Selling Price (BDT)" required class="bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs text-white outline-none">
-          <input type="number" x-model="newProd.stock" placeholder="Stock Qty" required class="bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs text-white outline-none">
-          <button type="submit" class="bg-silverAccent text-black font-semibold rounded-xl text-xs py-3">Add Product</button>
+          <input type="number" x-model="newProd.stock" placeholder="Initial Stock" required class="bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs text-white outline-none">
+          <button type="submit" class="bg-silverAccent text-black font-bold rounded-xl text-xs py-3">Add Product</button>
         </form>
 
         <div class="space-y-3">
@@ -203,220 +203,27 @@
               </div>
               <div class="flex items-center gap-3">
                 <span class="font-bold text-silverAccent">৳ <span x-text="p.price"></span></span>
-                <button @click="deleteProduct(p.id)" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-trash"></i></button>
+                <button @click="deleteProduct(p.id)" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-trash text-sm"></i></button>
               </div>
             </div>
           </template>
         </div>
       </div>
 
-      <!-- 4. INVENTORY TAB -->
-      <div x-show="activeTab === 'inventory'" class="space-y-6">
-        <h2 class="text-xl font-bold text-silverAccent" x-text="lang === 'bn' ? 'ইনভентরি ট্র্যাকিং' : 'Inventory Tracking'"></h2>
+      <!-- TAB 4: INVENTORY -->
+      <div x-show="activeTab === 'inventory'" class="space-y-6" style="display: none;">
+        <h2 class="text-xl font-bold text-silverAccent" x-text="lang === 'bn' ? 'ইনভেন্টরি ট্র্যাকিং' : 'Inventory Tracking'"></h2>
         <div class="space-y-3">
           <template x-for="p in products" :key="p.id">
             <div class="bg-cardDark border border-zinc-800 p-4 rounded-2xl flex justify-between items-center text-xs">
-              <span class="font-bold text-white" x-text="p.name"></span>
+              <span class="font-bold text-white text-sm" x-text="p.name"></span>
               <span class="px-3 py-1 rounded-full font-bold" :class="p.stock <= 5 ? 'bg-red-500/20 text-red-400' : 'bg-zinc-900 text-silverAccent'">
-                <span x-text="p.stock"></span> in stock
+                <span x-text="p.stock"></span> units available
               </span>
             </div>
           </template>
         </div>
       </div>
 
-      <!-- 5. EXPENSES TAB -->
-      <div x-show="activeTab === 'expenses'" class="space-y-6">
-        <h2 class="text-xl font-bold text-silverAccent" x-text="lang === 'bn' ? 'খরচসমূহ' : 'Expenses'"></h2>
-        <form @submit.prevent="addExpense()" class="bg-cardDark border border-zinc-800 p-4 rounded-2xl grid grid-cols-1 md:grid-cols-3 gap-3">
-          <input type="text" x-model="newExp.desc" placeholder="Expense Description" required class="bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs text-white outline-none">
-          <input type="number" x-model="newExp.amount" placeholder="Amount (BDT)" required class="bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs text-white outline-none">
-          <button type="submit" class="bg-silverAccent text-black font-semibold rounded-xl text-xs py-3">Record Expense</button>
-        </form>
-        <div class="space-y-3">
-          <template x-for="e in expenses" :key="e.id">
-            <div class="bg-cardDark border border-zinc-800 p-4 rounded-2xl flex justify-between items-center text-xs">
-              <span class="text-white font-medium" x-text="e.desc"></span>
-              <span class="text-red-400 font-bold">৳ <span x-text="e.amount"></span></span>
-            </div>
-          </template>
-        </div>
-      </div>
-
-      <!-- 6. PROFIT & LOSS TAB -->
-      <div x-show="activeTab === 'finance'" class="space-y-6">
-        <h2 class="text-xl font-bold text-silverAccent" x-text="lang === 'bn' ? 'লাভ ও ক্ষতি হিসাব' : 'Profit & Loss'"></h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="bg-cardDark border border-zinc-800 p-5 rounded-2xl">
-            <p class="text-xs text-zinc-400">Total Sales Revenue</p>
-            <h3 class="text-xl font-bold text-white mt-1">৳ <span x-text="getTotalSales().toLocaleString()"></span></h3>
-          </div>
-          <div class="bg-cardDark border border-zinc-800 p-5 rounded-2xl">
-            <p class="text-xs text-zinc-400">Total Operating Expenses</p>
-            <h3 class="text-xl font-bold text-red-400 mt-1">৳ <span x-text="getTotalExpenses().toLocaleString()"></span></h3>
-          </div>
-          <div class="bg-cardDark border border-zinc-800 p-5 rounded-2xl">
-            <p class="text-xs text-zinc-400">Net Business Profit</p>
-            <h3 class="text-xl font-bold mt-1" :class="getNetProfit() >= 0 ? 'text-green-400' : 'text-red-400'">৳ <span x-text="getNetProfit().toLocaleString()"></span></h3>
-          </div>
-        </div>
-      </div>
-
-    </main>
-
-    <!-- MOBILE BOTTOM NAVBAR -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-cardDark border-t border-zinc-800 flex justify-around py-3 px-2 z-50">
-      <template x-for="item in menuItems.slice(0, 5)" :key="item.id">
-        <button @click="activeTab = item.id" :class="activeTab === item.id ? 'text-silverAccent' : 'text-zinc-500'" class="flex flex-col items-center gap-1">
-          <i :class="item.icon" class="text-base"></i>
-          <span class="text-[9px]" x-text="lang === 'bn' ? item.bn : item.en"></span>
-        </button>
-      </template>
-    </nav>
-  </div>
-
-  <!-- ORDER CREATION MODAL -->
-  <div x-show="showOrderModal" class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50" style="display: none;">
-    <div class="bg-cardDark border border-zinc-800 rounded-2xl p-6 max-w-md w-full space-y-4">
-      <h3 class="text-lg font-bold text-silverAccent" x-text="lang === 'bn' ? 'নতুন অর্ডার যোগ করুন' : 'Create New Order'"></h3>
-      <form @submit.prevent="createOrder()" class="space-y-3">
-        <input type="text" x-model="newOrder.customerName" placeholder="Customer Name" required class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs text-white outline-none">
-        <input type="text" x-model="newOrder.phone" placeholder="Phone Number" required class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs text-white outline-none">
-        <select x-model="newOrder.selectedProduct" required class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs text-white outline-none">
-          <option value="">Select Product</option>
-          <template x-for="p in products" :key="p.id">
-            <option :value="p.id" x-text="p.name + ' (৳ ' + p.price + ')'"></option>
-          </template>
-        </select>
-        <input type="number" x-model="newOrder.quantity" min="1" placeholder="Quantity" required class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs text-white outline-none">
-        <div class="flex gap-2 pt-2">
-          <button type="submit" class="flex-1 bg-silverAccent text-black font-semibold py-3 rounded-xl text-xs">Save Order</button>
-          <button type="button" @click="showOrderModal = false" class="px-4 bg-zinc-800 text-zinc-300 rounded-xl text-xs">Cancel</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ALPINE.JS ENGINE -->
-  <script>
-    function vyroApp() {
-      return {
-        isAuthenticated: false,
-        loginEmail: 'owner@vyrowear.com',
-        loginPassword: 'vyro',
-        activeTab: 'dashboard',
-        lang: 'bn',
-        showOrderModal: false,
-
-        menuItems: [
-          { id: 'dashboard', bn: 'ড্যাশবোর্ড', en: 'Dashboard', icon: 'fa-solid fa-chart-pie' },
-          { id: 'orders', bn: 'অর্ডারসমূহ', en: 'Orders', icon: 'fa-solid fa-bag-shopping' },
-          { id: 'products', bn: 'প্রোডাক্টস', en: 'Products', icon: 'fa-solid fa-box' },
-          { id: 'inventory', bn: 'ইনভেন্টরি', en: 'Inventory', icon: 'fa-solid fa-layer-group' },
-          { id: 'expenses', bn: 'খরচসমূহ', en: 'Expenses', icon: 'fa-solid fa-receipt' },
-          { id: 'finance', bn: 'লাভ-ক্ষতি', en: 'Profit & Loss', icon: 'fa-solid fa-[#C0C0C0] fa-scale-balanced' }
-        ],
-
-        products: [],
-        orders: [],
-        expenses: [],
-
-        newProd: { name: '', price: '', stock: '' },
-        newExp: { desc: '', amount: '' },
-        newOrder: { customerName: '', phone: '', selectedProduct: '', quantity: 1 },
-
-        initApp() {
-          const savedProducts = localStorage.getItem('vyro_products');
-          const savedOrders = localStorage.getItem('vyro_orders');
-          const savedExpenses = localStorage.getItem('vyro_expenses');
-
-          this.products = savedProducts ? JSON.parse(savedProducts) : [
-            { id: '1', name: 'Oversized Noir Hoodie', sku: 'VYRO-HD-01', price: 2490, stock: 12 }
-          ];
-          this.orders = savedOrders ? JSON.parse(savedOrders) : [];
-          this.expenses = savedExpenses ? JSON.parse(savedExpenses) : [];
-        },
-
-        login() {
-          if (this.loginEmail && this.loginPassword) {
-            this.isAuthenticated = true;
-          }
-        },
-
-        saveData() {
-          localStorage.setItem('vyro_products', JSON.stringify(this.products));
-          localStorage.setItem('vyro_orders', JSON.stringify(this.orders));
-          localStorage.setItem('vyro_expenses', JSON.stringify(this.expenses));
-        },
-
-        addProduct() {
-          this.products.push({
-            id: Date.now().toString(),
-            name: this.newProd.name,
-            sku: 'VYRO-' + Math.floor(100 + Math.random() * 900),
-            price: Number(this.newProd.price),
-            stock: Number(this.newProd.stock)
-          });
-          this.saveData();
-          this.newProd = { name: '', price: '', stock: '' };
-        },
-
-        deleteProduct(id) {
-          this.products = this.products.filter(p => p.id !== id);
-          this.saveData();
-        },
-
-        createOrder() {
-          const prod = this.products.find(p => p.id === this.newOrder.selectedProduct);
-          if (!prod) return;
-
-          const grandTotal = (prod.price * Number(this.newOrder.quantity)) + 100;
-          this.orders.unshift({
-            id: Date.now().toString(),
-            invoiceNo: Math.floor(100000 + Math.random() * 900000),
-            customerName: this.newOrder.customerName,
-            phone: this.newOrder.phone,
-            productName: prod.name,
-            quantity: Number(this.newOrder.quantity),
-            grandTotal: grandTotal,
-            status: 'Pending'
-          });
-
-          // Deduct stock
-          prod.stock = Math.max(0, prod.stock - Number(this.newOrder.quantity));
-
-          this.saveData();
-          this.showOrderModal = false;
-          this.newOrder = { customerName: '', phone: '', selectedProduct: '', quantity: 1 };
-        },
-
-        addExpense() {
-          this.expenses.unshift({
-            id: Date.now().toString(),
-            desc: this.newExp.desc,
-            amount: Number(this.newExp.amount)
-          });
-          this.saveData();
-          this.newExp = { desc: '', amount: '' };
-        },
-
-        getTotalSales() {
-          return this.orders.filter(o => o.status !== 'Cancelled').reduce((acc, o) => acc + Number(o.grandTotal || 0), 0);
-        },
-
-        getTotalExpenses() {
-          return this.expenses.reduce((acc, e) => acc + Number(e.amount || 0), 0);
-        },
-
-        getNetProfit() {
-          return this.getTotalSales() - this.getTotalExpenses();
-        },
-
-        getLowStockCount() {
-          return this.products.filter(p => Number(p.stock) <= 5).length;
-        }
-      }
-    }
-  </script>
-</body>
-</html>
+      <!-- TAB 5: EXPENSES -->
+      <div x-show="activeTab === 'expenses'" class="space-y-6" style="display:
