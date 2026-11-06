@@ -1,492 +1,445 @@
-<!DOCTYPE html>
-<html lang="bn" class="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VYRO WEAR PRO - Business Management System</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        navy: { 900: '#0b0f19', 800: '#111827', 700: '#1f2937', 600: '#374151' }
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts Bengali -->
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Hind Siliguri', sans-serif; }
-    </style>
-</head>
-<body class="bg-navy-900 text-gray-100 min-h-screen flex flex-col">
-    <!-- App Header with Logo -->
-    <header class="bg-navy-800 border-b border-navy-700 sticky top-0 z-50 px-4 py-3 flex items-center justify-between shadow-md">
-        <div class="flex items-center space-x-3">
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=60" alt="VYRO WEAR Logo" class="w-10 h-10 rounded-full border border-gray-600 object-cover shadow-sm">
+import React, { useState, useEffect } from 'react';
+import { 
+  LayoutDashboard, ShoppingBag, Package, Layers, Users, 
+  Receipt, PieChart, FileText, Settings, LogOut, Globe, Plus, Trash2, CheckCircle 
+} from 'lucide-react';
+
+export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [email, setEmail] = useState('owner@vyrowear.com');
+  const [password, setPassword] = useState('vyro1234');
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [lang, setLang] = useState('bn'); // 'bn' or 'en'
+
+  // Persistent States
+  const [products, setProducts] = useState(() => {
+    const saved = localStorage.getItem('vyro_products');
+    return saved ? JSON.parse(saved) : [
+      { id: '1', name: 'Oversized Noir Hoodie', sku: 'VYRO-HD-01', category: 'Hoodies', cost: 1200, price: 2490, stock: 15, size: 'L', color: 'Black' }
+    ];
+  });
+
+  const [orders, setOrders] = useState(() => {
+    const saved = localStorage.getItem('vyro_orders');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [expenses, setExpenses] = useState(() => {
+    const saved = localStorage.getItem('vyro_expenses');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('vyro_products', JSON.stringify(products));
+    localStorage.setItem('vyro_orders', JSON.stringify(orders));
+    localStorage.setItem('vyro_expenses', JSON.stringify(expenses));
+  }, [products, orders, expenses]);
+
+  // Handle Login
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (email && password) {
+      setIsAuthenticated(true);
+    }
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[#0B0B0C] flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-[#141416] border border-zinc-800 rounded-2xl p-8 shadow-2xl">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold tracking-widest text-[#C0C0C0]">VYRO WEAR</h1>
+            <p className="text-xs tracking-widest text-zinc-400 mt-1">ELEVATE YOUR EVERYDAY.</p>
+          </div>
+          <form onSubmit={handleLogin} className="space-y-4">
             <div>
-                <h1 class="font-bold text-lg text-white leading-tight">VYRO WEAR PRO</h1>
-                <p class="text-xs text-gray-400">এলিভেট ইউর এভরিডে (৳ BDT)</p>
+              <label className="text-xs text-zinc-400 block mb-1">Owner Email</label>
+              <input 
+                type="email" 
+                required
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-white focus:border-[#C0C0C0] outline-none text-sm"
+              />
             </div>
+            <div>
+              <label className="text-xs text-zinc-400 block mb-1">Password</label>
+              <input 
+                type="password" 
+                required
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-white focus:border-[#C0C0C0] outline-none text-sm"
+              />
+            </div>
+            <button 
+              type="submit"
+              className="w-full py-3 bg-[#C0C0C0] text-black font-semibold rounded-lg hover:bg-white transition-all text-sm tracking-wide"
+            >
+              {lang === 'bn' ? 'প্রবেশ করুন (Login)' : 'Secure Login'}
+            </button>
+          </form>
         </div>
-        <div class="flex items-center space-x-2">
-            <span class="text-xs bg-emerald-600 text-white px-2 py-1 rounded-full font-medium">প্রোডাকশন মোড</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[#0B0B0C] text-[#F8F9FA] flex flex-col pb-20 md:pb-0 md:flex-row font-sans">
+      {/* Sidebar for Desktop */}
+      <aside className="hidden md:flex flex-col w-64 bg-[#141416] border-r border-zinc-800 p-6 sticky top-0 h-screen">
+        <div className="mb-8">
+          <h1 className="text-xl font-bold tracking-widest text-[#C0C0C0]">VYRO WEAR</h1>
+          <p className="text-[10px] tracking-wider text-zinc-400">ELEVATE YOUR EVERYDAY.</p>
         </div>
-    </header>
-
-    <!-- Main Container (Dynamic Views) -->
-    <main class="flex-1 p-4 max-w-7xl mx-auto w-full pb-24">
-        
-        <!-- 1. HOME / DASHBOARD VIEW -->
-        <div id="view-home" class="view-section">
-            <div class="bg-gradient-to-r from-navy-800 to-navy-700 border border-navy-600 rounded-2xl p-5 mb-6 shadow-lg">
-                <h2 class="text-xl font-bold text-white mb-1">স্বাগতম, ওনার! 👋</h2>
-                <p class="text-sm text-gray-300">VYRO WEAR ব্র্যান্ডের আজকের রিয়েল-টাইম হিসাব নিচে দেওয়া হলো।</p>
-            </div>
-
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl shadow">
-                    <p class="text-xs text-gray-400 mb-1">আজকের মোট বিক্রয়</p>
-                    <h3 id="stat-sales" class="text-xl font-bold text-emerald-400">৳ ০.০০</h3>
-                </div>
-                <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl shadow">
-                    <p class="text-xs text-gray-400 mb-1">আজকের অর্ডার</p>
-                    <h3 id="stat-orders" class="text-xl font-bold text-blue-400">০ টি</h3>
-                </div>
-                <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl shadow">
-                    <p class="text-xs text-gray-400 mb-1">আজকের খরচ</p>
-                    <h3 id="stat-expense" class="text-xl font-bold text-red-400">৳ ০.০০</h3>
-                </div>
-                <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl shadow">
-                    <p class="text-xs text-gray-400 mb-1">আজকের লাভ</p>
-                    <h3 id="stat-profit" class="text-xl font-bold text-amber-400">৳ ০.০০</h3>
-                </div>
-            </div>
-
-            <!-- Quick Navigation Modules -->
-            <div class="grid grid-cols-3 md:grid-cols-6 gap-3 mb-6">
-                <button onclick="switchView('pos')" class="bg-navy-800 hover:bg-navy-700 border border-navy-700 p-3 rounded-xl flex flex-col items-center text-center transition">
-                    <i class="fa-solid fa-cash-register text-emerald-400 text-xl mb-1"></i>
-                    <span class="text-xs font-medium">POS সেলস</span>
-                </button>
-                <button onclick="switchView('orders')" class="bg-navy-800 hover:bg-navy-700 border border-navy-700 p-3 rounded-xl flex flex-col items-center text-center transition">
-                    <i class="fa-solid fa-box-open text-blue-400 text-xl mb-1"></i>
-                    <span class="text-xs font-medium">অর্ডারস</span>
-                </button>
-                <button onclick="switchView('stock')" class="bg-navy-800 hover:bg-navy-700 border border-navy-700 p-3 rounded-xl flex flex-col items-center text-center transition">
-                    <i class="fa-solid fa-shirt text-purple-400 text-xl mb-1"></i>
-                    <span class="text-xs font-medium">পণ্য ও স্টক</span>
-                </button>
-                <button onclick="switchView('expense')" class="bg-navy-800 hover:bg-navy-700 border border-navy-700 p-3 rounded-xl flex flex-col items-center text-center transition">
-                    <i class="fa-solid fa-wallet text-red-400 text-xl mb-1"></i>
-                    <span class="text-xs font-medium">খরচসমূহ</span>
-                </button>
-                <button onclick="switchView('customers')" class="bg-navy-800 hover:bg-navy-700 border border-navy-700 p-3 rounded-xl flex flex-col items-center text-center transition">
-                    <i class="fa-solid fa-users text-amber-400 text-xl mb-1"></i>
-                    <span class="text-xs font-medium">কাস্টমার</span>
-                </button>
-                <button onclick="switchView('reports')" class="bg-navy-800 hover:bg-navy-700 border border-navy-700 p-3 rounded-xl flex flex-col items-center text-center transition">
-                    <i class="fa-solid fa-chart-line text-teal-400 text-xl mb-1"></i>
-                    <span class="text-xs font-medium">রিপোর্টস</span>
-                </button>
-            </div>
-
-            <!-- Recent Orders Section -->
-            <div class="bg-navy-800 border border-navy-700 rounded-xl p-4 shadow">
-                <h3 class="font-bold text-sm text-white mb-3">সাম্প্রতিক অর্ডারসমূহ</h3>
-                <div id="recent-orders-list" class="space-y-2">
-                    <p class="text-center text-gray-400 text-sm py-4">কোনো অর্ডার পাওয়া যায়নি।</p>
-                </div>
-            </div>
+        <nav className="space-y-1 flex-1 overflow-y-auto pr-2">
+          <NavItem icon={<LayoutDashboard size={18}/>} label={lang === 'bn' ? 'ড্যাশবোর্ড' : 'Dashboard'} active={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} />
+          <NavItem icon={<ShoppingBag size={18}/>} label={lang === 'bn' ? 'অর্ডারসমূহ' : 'Orders'} active={activeTab === 'orders'} onClick={() => setActiveTab('orders')} />
+          <NavItem icon={<Package size={18}/>} label={lang === 'bn' ? 'প্রোডাক্টস' : 'Products'} active={activeTab === 'products'} onClick={() => setActiveTab('products')} />
+          <NavItem icon={<Layers size={18}/>} label={lang === 'bn' ? 'ইনভেন্টরি' : 'Inventory'} active={activeTab === 'inventory'} onClick={() => setActiveTab('inventory')} />
+          <NavItem icon={<Users size={18}/>} label={lang === 'bn' ? 'গ্রাহক' : 'Customers'} active={activeTab === 'customers'} onClick={() => setActiveTab('customers')} />
+          <NavItem icon={<Receipt size={18}/>} label={lang === 'bn' ? 'খরচসমূহ' : 'Expenses'} active={activeTab === 'expenses'} onClick={() => setActiveTab('expenses')} />
+          <NavItem icon={<PieChart size={18}/>} label={lang === 'bn' ? 'লাভ ও ক্ষতি' : 'Profit & Loss'} active={activeTab === 'finance'} onClick={() => setActiveTab('finance')} />
+          <NavItem icon={<FileText size={18}/>} label={lang === 'bn' ? 'রিপোর্ট' : 'Reports'} active={activeTab === 'reports'} onClick={() => setActiveTab('reports')} />
+          <NavItem icon={<Settings size={18}/>} label={lang === 'bn' ? 'সেটিংস' : 'Settings'} active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} />
+        </nav>
+        <div className="pt-4 border-t border-zinc-800 flex items-center justify-between">
+          <button onClick={() => setLang(lang === 'bn' ? 'en' : 'bn')} className="flex items-center gap-2 text-xs text-zinc-400 hover:text-white">
+            <Globe size={14} /> {lang === 'bn' ? 'English' : 'বাংলা'}
+          </button>
+          <button onClick={() => setIsAuthenticated(false)} className="text-red-400 hover:text-red-300">
+            <LogOut size={16} />
+          </button>
         </div>
+      </aside>
 
-        <!-- 2. POS VIEW -->
-        <div id="view-pos" class="view-section hidden">
-            <h2 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-cash-register text-emerald-400 mr-2"></i> POS সেলস ও অর্ডার জেনারেটর</h2>
-            <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl space-y-4">
-                <div>
-                    <label class="block text-xs text-gray-400 mb-1">কাস্টমারের নাম</label>
-                    <input type="text" id="pos-customer" placeholder="যেমন: Rahim Ahmed" class="w-full bg-navy-900 border border-navy-600 rounded-lg p-2.5 text-sm text-white">
-                </div>
-                <div>
-                    <label class="block text-xs text-gray-400 mb-1">মোবাইল নম্বর</label>
-                    <input type="text" id="pos-phone" placeholder="017xxxxxxxx" class="w-full bg-navy-900 border border-navy-600 rounded-lg p-2.5 text-sm text-white">
-                </div>
-                <div>
-                    <label class="block text-xs text-gray-400 mb-1">প্রোডাক্ট সিলেক্ট করুন</label>
-                    <select id="pos-product" class="w-full bg-navy-900 border border-navy-600 rounded-lg p-2.5 text-sm text-white">
-                        <!-- Dynamically loaded -->
-                    </select>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs text-gray-400 mb-1">পরিমাণ (Quantity)</label>
-                        <input type="number" id="pos-qty" value="1" min="1" class="w-full bg-navy-900 border border-navy-600 rounded-lg p-2.5 text-sm text-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-gray-400 mb-1">মূল্য (৳)</label>
-                        <input type="number" id="pos-price" placeholder="0" class="w-full bg-navy-900 border border-navy-600 rounded-lg p-2.5 text-sm text-white">
-                    </div>
-                </div>
-                <button onclick="completeSale()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-lg font-bold text-sm shadow">অর্ডার কনফার্ম ও স্টক আপডেট করুন</button>
-            </div>
+      {/* Main Content View */}
+      <main className="flex-1 p-4 md:p-8 overflow-y-auto">
+        <header className="flex justify-between items-center mb-6 pb-4 border-b border-zinc-800 md:hidden">
+          <div>
+            <h1 className="text-lg font-bold tracking-widest text-[#C0C0C0]">VYRO WEAR</h1>
+            <p className="text-[9px] text-zinc-400">ELEVATE YOUR EVERYDAY.</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <button onClick={() => setLang(lang === 'bn' ? 'en' : 'bn')} className="text-xs bg-zinc-800 px-2 py-1 rounded text-zinc-300">
+              {lang === 'bn' ? 'EN' : 'বাং'}
+            </button>
+            <button onClick={() => setIsAuthenticated(false)} className="text-red-400">
+              <LogOut size={18} />
+            </button>
+          </div>
+        </header>
+
+        {activeTab === 'dashboard' && <Dashboard products={products} orders={orders} expenses={expenses} lang={lang} />}
+        {activeTab === 'orders' && <Orders orders={orders} setOrders={setOrders} products={products} setProducts={setProducts} lang={lang} />}
+        {activeTab === 'products' && <Products products={products} setProducts={setProducts} lang={lang} />}
+        {activeTab === 'inventory' && <Inventory products={products} setProducts={setProducts} lang={lang} />}
+        {activeTab === 'customers' && <Customers orders={orders} lang={lang} />}
+        {activeTab === 'expenses' && <Expenses expenses={expenses} setExpenses={setExpenses} lang={lang} />}
+        {activeTab === 'finance' && <Finance orders={orders} expenses={expenses} lang={lang} />}
+        {activeTab === 'reports' && <Reports orders={orders} products={products} expenses={expenses} lang={lang} />}
+        {activeTab === 'settings' && <SettingsView lang={lang} setLang={setLang} />}
+      </main>
+
+      {/* Mobile Bottom Navigation Bar */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#141416] border-t border-zinc-800 flex justify-around py-3 px-2 z-50">
+        <MobileNavBtn icon={<LayoutDashboard size={20}/>} active={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} label="Home" />
+        <MobileNavBtn icon={<ShoppingBag size={20}/>} active={activeTab === 'orders'} onClick={() => setActiveTab('orders')} label="Orders" />
+        <MobileNavBtn icon={<Package size={20}/>} active={activeTab === 'products'} onClick={() => setActiveTab('products')} label="Products" />
+        <MobileNavBtn icon={<Layers size={20}/>} active={activeTab === 'inventory'} onClick={() => setActiveTab('inventory')} label="Stock" />
+        <MobileNavBtn icon={<PieChart size={20}/>} active={activeTab === 'finance'} onClick={() => setActiveTab('finance')} label="Profit" />
+        <MobileNavBtn icon={<Settings size={20}/>} active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} label="Settings" />
+      </nav>
+    </div>
+  );
+}
+
+function NavItem({ icon, label, active, onClick }) {
+  return (
+    <button 
+      onClick={onClick}
+      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${active ? 'bg-[#C0C0C0] text-black font-semibold' : 'text-zinc-400 hover:bg-zinc-900 hover:text-white'}`}
+    >
+      {icon}
+      <span>{label}</span>
+    </button>
+  );
+}
+
+function MobileNavBtn({ icon, active, onClick, label }) {
+  return (
+    <button onClick={onClick} className={`flex flex-col items-center gap-1 ${active ? 'text-[#C0C0C0]' : 'text-zinc-500'}`}>
+      {icon}
+      <span className="text-[10px]">{label}</span>
+    </button>
+  );
+}
+
+// --- SUB-VIEWS / COMPONENTS ---
+
+function Dashboard({ products, orders, expenses, lang }) {
+  const activeOrders = orders.filter(o => o.status !== 'Cancelled');
+  const totalSales = activeOrders.reduce((acc, o) => acc + Number(o.grandTotal || 0), 0);
+  const totalExpenses = expenses.reduce((acc, e) => acc + Number(e.amount || 0), 0);
+  const lowStockCount = products.filter(p => Number(p.stock) <= 5).length;
+
+  return (
+    <div className="space-y-6">
+      <h2 className="text-xl font-bold text-[#C0C0C0]">
+        {lang === 'bn' ? 'বিজনেস ড্যাশবোর্ড' : 'Business Dashboard'}
+      </h2>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-[#141416] border border-zinc-800 rounded-2xl p-4">
+          <p className="text-xs text-zinc-400">{lang === 'bn' ? 'মোট বিক্রি' : 'Total Sales'}</p>
+          <h4 className="text-lg font-bold text-white mt-1">৳ {totalSales.toLocaleString()}</h4>
         </div>
-
-        <!-- 3. ORDERS VIEW -->
-        <div id="view-orders" class="view-section hidden">
-            <h2 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-box-open text-blue-400 mr-2"></i> অর্ডার ট্র্যাকিং</h2>
-            <div id="orders-container" class="space-y-3">
-                <!-- Dynamic Orders -->
-            </div>
+        <div className="bg-[#141416] border border-zinc-800 rounded-2xl p-4">
+          <p className="text-xs text-zinc-400">{lang === 'bn' ? 'মোট খরচ' : 'Total Expenses'}</p>
+          <h4 className="text-lg font-bold text-white mt-1">৳ {totalExpenses.toLocaleString()}</h4>
         </div>
-
-        <!-- 4. STOCK VIEW -->
-        <div id="view-stock" class="view-section hidden">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-bold text-white"><i class="fa-solid fa-shirt text-purple-400 mr-2"></i> পণ্য ও স্টক (ইন/আউট)</h2>
-            </div>
-            <!-- Add Product Form -->
-            <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl mb-6 space-y-3">
-                <h3 class="text-sm font-bold text-purple-300">নতুন পণ্য যোগ করুন</h3>
-                <input type="text" id="prod-name" placeholder="প্রোডাক্ট নাম (যেমন: Oversized Hoodie)" class="w-full bg-navy-900 border border-navy-600 rounded-lg p-2 text-sm text-white">
-                <div class="grid grid-cols-3 gap-2">
-                    <input type="text" id="prod-size" placeholder="সাইজ (L/XL)" class="bg-navy-900 border border-navy-600 rounded-lg p-2 text-sm text-white">
-                    <input type="text" id="prod-color" placeholder="রঙ (Black)" class="bg-navy-900 border border-navy-600 rounded-lg p-2 text-sm text-white">
-                    <input type="number" id="prod-stock" placeholder="স্টক সংখ্যা" class="bg-navy-900 border border-navy-600 rounded-lg p-2 text-sm text-white">
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <input type="number" id="prod-buying-price" placeholder="ক্রয় মূল্য (৳)" class="bg-navy-900 border border-navy-600 rounded-lg p-2 text-sm text-white">
-                    <input type="number" id="prod-selling-price" placeholder="বিক্রয় মূল্য (৳)" class="bg-navy-900 border border-navy-600 rounded-lg p-2 text-sm text-white">
-                </div>
-                <button onclick="addNewProduct()" class="w-full bg-purple-600 hover:bg-purple-500 text-white py-2 rounded-lg text-sm font-medium">স্টকে পণ্য যুক্ত করুন</button>
-            </div>
-            <!-- Stock List -->
-            <div class="bg-navy-800 border border-navy-700 rounded-xl p-4">
-                <h3 class="text-sm font-bold text-white mb-3">বর্তমান স্টক তালিকা</h3>
-                <div id="stock-list-container" class="space-y-2">
-                    <!-- Dynamic Stock -->
-                </div>
-            </div>
+        <div className="bg-[#141416] border border-zinc-800 rounded-2xl p-4">
+          <p className="text-xs text-zinc-400">{lang === 'bn' ? 'মোট অর্ডার' : 'Total Orders'}</p>
+          <h4 className="text-lg font-bold text-white mt-1">{orders.length}</h4>
         </div>
-
-        <!-- 5. EXPENSE VIEW -->
-        <div id="view-expense" class="view-section hidden">
-            <h2 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-wallet text-red-400 mr-2"></i> খরচ ম্যানেজমেন্ট</h2>
-            <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl space-y-3 mb-6">
-                <input type="text" id="exp-title" placeholder="খাতের নাম (যেমন: কুরিয়ার চার্জ, অ্যাড কস্ট)" class="w-full bg-navy-900 border border-navy-600 rounded-lg p-2 text-sm text-white">
-                <input type="number" id="exp-amount" placeholder="টাকার পরিমাণ (৳)" class="w-full bg-navy-900 border border-navy-600 rounded-lg p-2 text-sm text-white">
-                <button onclick="addExpense()" class="w-full bg-red-600 hover:bg-red-500 text-white py-2 rounded-lg font-medium text-sm">খরচ সেভ করুন</button>
-            </div>
-            <div class="bg-navy-800 border border-navy-700 rounded-xl p-4">
-                <h3 class="text-sm font-bold text-white mb-3">সাম্প্রতিক খরচসমূহ</h3>
-                <div id="expense-list" class="space-y-2">
-                    <p class="text-center text-gray-400 text-sm py-4">কোনো খরচ এন্ট্রি করা হয়নি।</p>
-                </div>
-            </div>
+        <div className={`bg-[#141416] border rounded-2xl p-4 ${lowStockCount > 0 ? 'border-red-500/50' : 'border-zinc-800'}`}>
+          <p className="text-xs text-zinc-400">{lang === 'bn' ? 'লো স্টক' : 'Low Stock'}</p>
+          <h4 className="text-lg font-bold text-white mt-1">{lowStockCount}</h4>
         </div>
+      </div>
+    </div>
+  );
+}
 
-        <!-- 6. CUSTOMERS VIEW -->
-        <div id="view-customers" class="view-section hidden">
-            <h2 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-users text-amber-400 mr-2"></i> কাস্টমার ডাটাবেস</h2>
-            <div id="customers-list" class="space-y-2">
-                <p class="text-center text-gray-400 text-sm py-4">কোনো কাস্টমার নেই।</p>
-            </div>
-        </div>
+function Orders({ orders, setOrders, products, lang }) {
+  const [showModal, setShowModal] = useState(false);
+  const [customerName, setCustomerName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [selectedProduct, setSelectedProduct] = useState('');
+  const [quantity, setQuantity] = useState(1);
 
-        <!-- 7. REPORTS VIEW -->
-        <div id="view-reports" class="view-section hidden">
-            <h2 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-chart-line text-teal-400 mr-2"></i> বিজনেস রিপোর্ট ও ডাটা ম্যানেজমেন্ট</h2>
-            <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl space-y-3">
-                <button onclick="exportData()" class="w-full text-left bg-navy-700 hover:bg-navy-600 p-3 rounded-lg text-sm font-medium flex items-center justify-between">
-                    <span>📥 ডাটা ব্যাকআপ ডাউনলোড (JSON)</span>
-                    <i class="fa-solid fa-download"></i>
-                </button>
-                <button onclick="clearAllData()" class="w-full text-left bg-red-900/40 hover:bg-red-900/60 border border-red-700 p-3 rounded-lg text-sm font-medium text-red-300 flex items-center justify-between">
-                    <span>🗑️ সকল ডাটা রিসেট করুন</span>
-                    <i class="fa-solid fa-trash"></i>
-                </button>
-            </div>
-        </div>
+  const handleCreateOrder = (e) => {
+    e.preventDefault();
+    const prod = products.find(p => p.id === selectedProduct);
+    if (!prod) return;
 
-    </main>
+    const grandTotal = (prod.price * Number(quantity)) + 100; // 100 delivery
+    const newOrder = {
+      id: Date.now().toString(),
+      invoiceNo: Math.floor(100000 + Math.random() * 900000),
+      customerName,
+      phone,
+      productName: prod.name,
+      quantity: Number(quantity),
+      grandTotal,
+      status: 'Pending',
+      date: new Date().toLocaleDateString()
+    };
 
-    <!-- Bottom Navigation Bar for Mobile -->
-    <nav class="bg-navy-800 border-t border-navy-700 fixed bottom-0 left-0 right-0 py-2 px-4 flex justify-between items-center z-50 shadow-lg">
-        <button onclick="switchView('home')" id="nav-home" class="flex flex-col items-center text-emerald-400 nav-btn">
-            <i class="fa-solid fa-house text-lg"></i>
-            <span class="text-[10px]">হোম</span>
+    setOrders([newOrder, ...orders]);
+    setShowModal(false);
+    setCustomerName('');
+    setPhone('');
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-bold text-[#C0C0C0]">{lang === 'bn' ? 'অর্ডারসমূহ' : 'Orders'}</h2>
+        <button onClick={() => setShowModal(true)} className="bg-[#C0C0C0] text-black font-semibold text-xs px-4 py-2.5 rounded-xl">
+          + {lang === 'bn' ? 'নতুন অর্ডার' : 'New Order'}
         </button>
-        <button onclick="switchView('pos')" id="nav-pos" class="flex flex-col items-center text-gray-400 hover:text-white nav-btn">
-            <i class="fa-solid fa-cash-register text-lg"></i>
-            <span class="text-[10px]">POS</span>
-        </button>
-        <button onclick="switchView('orders')" id="nav-orders" class="flex flex-col items-center text-gray-400 hover:text-white nav-btn">
-            <i class="fa-solid fa-box-open text-lg"></i>
-            <span class="text-[10px]">অর্ডার</span>
-        </button>
-        <button onclick="switchView('stock')" id="nav-stock" class="flex flex-col items-center text-gray-400 hover:text-white nav-btn">
-            <i class="fa-solid fa-shirt text-lg"></i>
-            <span class="text-[10px]">স্টক</span>
-        </button>
-        <button onclick="switchView('reports')" id="nav-reports" class="flex flex-col items-center text-gray-400 hover:text-white nav-btn">
-            <i class="fa-solid fa-bars text-lg"></i>
-            <span class="text-[10px]">মেনু</span>
-        </button>
-    </nav>
+      </div>
 
-    <!-- App JavaScript Logic -->
-    <script>
-        // Database State Initialization
-        let products = JSON.parse(localStorage.getItem('vyro_products')) || [];
-        let orders = JSON.parse(localStorage.getItem('vyro_orders')) || [];
-        let expenses = JSON.parse(localStorage.getItem('vyro_expenses')) || [];
+      <div className="space-y-3">
+        {orders.map(order => (
+          <div key={order.id} className="bg-[#141416] border border-zinc-800 rounded-2xl p-4 flex justify-between items-center">
+            <div>
+              <p className="text-sm font-bold text-white">#{order.invoiceNo} - {order.customerName}</p>
+              <p className="text-xs text-zinc-400">{order.productName} (Qty: {order.quantity}) | {order.phone}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-sm font-bold text-[#C0C0C0]">৳ {order.grandTotal}</p>
+              <span className="text-[10px] px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-300">{order.status}</span>
+            </div>
+          </div>
+        ))}
+      </div>
 
-        function saveData() {
-            localStorage.setItem('vyro_products', JSON.stringify(products));
-            localStorage.setItem('vyro_orders', JSON.stringify(orders));
-            localStorage.setItem('vyro_expenses', JSON.stringify(expenses));
-            updateDashboard();
-        }
+      {showModal && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
+          <div className="bg-[#141416] border border-zinc-800 rounded-2xl p-6 max-w-md w-full space-y-4">
+            <h3 className="text-lg font-bold text-[#C0C0C0]">{lang === 'bn' ? 'নতুন অর্ডার' : 'New Order'}</h3>
+            <form onSubmit={handleCreateOrder} className="space-y-3">
+              <input type="text" placeholder="Customer Name" required value={customerName} onChange={e => setCustomerName(e.target.value)} className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-xs text-white outline-none" />
+              <input type="text" placeholder="Phone Number" required value={phone} onChange={e => setPhone(e.target.value)} className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-xs text-white outline-none" />
+              <select value={selectedProduct} onChange={e => setSelectedProduct(e.target.value)} required className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-xs text-white outline-none">
+                <option value="">Select Product</option>
+                {products.map(p => (<option key={p.id} value={p.id}>{p.name} (৳ {p.price})</option>))}
+              </select>
+              <input type="number" min="1" value={quantity} onChange={e => setQuantity(e.target.value)} className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-xs text-white outline-none" />
+              <div className="flex gap-2 pt-2">
+                <button type="submit" className="flex-1 bg-[#C0C0C0] text-black font-semibold py-3 rounded-lg text-xs">Save</button>
+                <button type="button" onClick={() => setShowModal(false)} className="px-4 bg-zinc-800 text-zinc-300 rounded-lg text-xs">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
-        function switchView(viewName) {
-            document.querySelectorAll('.view-section').forEach(v => v.classList.add('hidden'));
-            const target = document.getElementById('view-' + viewName);
-            if (target) target.classList.remove('hidden');
+function Products({ products, setProducts, lang }) {
+  const [name, setName] = useState('');
+  const [price, setPrice] = useState('');
+  const [stock, setStock] = useState('');
 
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.replace('text-emerald-400', 'text-gray-400'));
-            const activeNav = document.getElementById('nav-' + viewName);
-            if (activeNav) activeNav.classList.replace('text-gray-400', 'text-emerald-400');
+  const handleAdd = (e) => {
+    e.preventDefault();
+    const newProd = { id: Date.now().toString(), name, price: Number(price), stock: Number(stock), sku: 'VYRO-' + Math.floor(100 + Math.random()*900) };
+    setProducts([...products, newProd]);
+    setName(''); setPrice(''); setStock('');
+  };
 
-            if(viewName === 'pos') loadPOSProducts();
-            if(viewName === 'stock') renderStock();
-            if(viewName === 'orders') renderOrders();
-            if(viewName === 'expense') renderExpenses();
-            if(viewName === 'customers') renderCustomers();
+  return (
+    <div className="space-y-6">
+      <h2 className="text-xl font-bold text-[#C0C0C0]">{lang === 'bn' ? 'প্রোডাক্ট ম্যানেজমেন্ট' : 'Products'}</h2>
+      <form onSubmit={handleAdd} className="bg-[#141416] border border-zinc-800 p-4 rounded-2xl grid grid-cols-1 md:grid-cols-4 gap-3">
+        <input type="text" placeholder="Product Name" required value={name} onChange={e => setName(e.target.value)} className="bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-xs text-white outline-none" />
+        <input type="number" placeholder="Price (BDT)" required value={price} onChange={e => setPrice(e.target.value)} className="bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-xs text-white outline-none" />
+        <input type="number" placeholder="Stock Qty" required value={stock} onChange={e => setStock(e.target.value)} className="bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-xs text-white outline-none" />
+        <button type="submit" className="bg-[#C0C0C0] text-black font-semibold rounded-lg text-xs py-3">Add Product</button>
+      </form>
+      <div className="space-y-3">
+        {products.map(p => (
+          <div key={p.id} className="bg-[#141416] border border-zinc-800 p-4 rounded-2xl flex justify-between items-center text-xs">
+            <div>
+              <p className="font-bold text-white text-sm">{p.name} ({p.sku})</p>
+              <p className="text-zinc-400">Stock: {p.stock} units</p>
+            </div>
+            <p className="font-bold text-[#C0C0C0]">৳ {p.price}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
-            window.scrollTo(0, 0);
-        }
+function Inventory({ products, lang }) {
+  return (
+    <div className="space-y-6">
+      <h2 className="text-xl font-bold text-[#C0C0C0]">{lang === 'bn' ? 'ইনভেন্টরি ও স্টক' : 'Inventory Stock'}</h2>
+      <div className="space-y-3">
+        {products.map(p => (
+          <div key={p.id} className="bg-[#141416] border border-zinc-800 p-4 rounded-2xl flex justify-between items-center text-xs">
+            <span className="font-bold text-white">{p.name}</span>
+            <span className={`px-3 py-1 rounded-full font-bold ${p.stock <= 5 ? 'bg-red-500/20 text-red-400' : 'bg-zinc-900 text-[#C0C0C0]'}`}>
+              {p.stock} in stock
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
-        // Add Product (Stock In)
-        function addNewProduct() {
-            const name = document.getElementById('prod-name').value;
-            const size = document.getElementById('prod-size').value;
-            const color = document.getElementById('prod-color').value;
-            const stock = parseInt(document.getElementById('prod-stock').value);
-            const buyingPrice = parseFloat(document.getElementById('prod-buying-price').value);
-            const sellingPrice = parseFloat(document.getElementById('prod-selling-price').value);
+function Customers({ orders, lang }) {
+  return (
+    <div className="space-y-6">
+      <h2 className="text-xl font-bold text-[#C0C0C0]">{lang === 'bn' ? 'গ্রাহক তালিকা' : 'Customers'}</h2>
+      <div className="space-y-3">
+        {orders.map(o => (
+          <div key={o.id} className="bg-[#141416] border border-zinc-800 p-4 rounded-2xl text-xs space-y-1">
+            <p className="font-bold text-white text-sm">{o.customerName}</p>
+            <p className="text-zinc-400">Phone: {o.phone}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
-            if(!name || isNaN(stock) || isNaN(sellingPrice)) {
-                alert('দয়া করে সঠিক তথ্য দিন!');
-                return;
-            }
+function Expenses({ expenses, setExpenses, lang }) {
+  const [desc, setDesc] = useState('');
+  const [amount, setAmount] = useState('');
 
-            products.push({ id: Date.now(), name, size, color, stock, buyingPrice, sellingPrice });
-            saveData();
-            renderStock();
-            alert('পণ্য সফলভাবে স্টকে যুক্ত হয়েছে!');
-            document.getElementById('prod-name').value = '';
-            document.getElementById('prod-size').value = '';
-            document.getElementById('prod-color').value = '';
-            document.getElementById('prod-stock').value = '';
-            document.getElementById('prod-buying-price').value = '';
-            document.getElementById('prod-selling-price').value = '';
-        }
+  const handleAdd = (e) => {
+    e.preventDefault();
+    setExpenses([{ id: Date.now().toString(), desc, amount: Number(amount) }, ...expenses]);
+    setDesc(''); setAmount('');
+  };
 
-        function renderStock() {
-            const container = document.getElementById('stock-list-container');
-            if(products.length === 0) {
-                container.innerHTML = `<p class="text-center text-gray-400 text-sm py-4">স্টকে কোনো প্রোডাক্ট নেই।</p>`;
-                return;
-            }
-            container.innerHTML = products.map(p => `
-                <div class="bg-navy-900 border border-navy-700 p-3 rounded-lg flex justify-between items-center text-sm">
-                    <div>
-                        <p class="font-bold text-white">${p.name} (${p.size || 'Free'}, ${p.color || 'N/A'})</p>
-                        <p class="text-xs text-gray-400">মূল্য: ৳${p.sellingPrice} | স্টক: <span class="text-emerald-400 font-bold">${p.stock} টি</span></p>
-                    </div>
-                    <button onclick="deleteProduct(${p.id})" class="text-red-400 hover:text-red-300 text-xs px-2 py-1 bg-red-900/30 rounded"><i class="fa-solid fa-trash"></i></button>
-                </div>
-            `).join('');
-        }
+  return (
+    <div className="space-y-6">
+      <h2 className="text-xl font-bold text-[#C0C0C0]">{lang === 'bn' ? 'খরচ ব্যবস্থাপনা' : 'Expenses'}</h2>
+      <form onSubmit={handleAdd} className="bg-[#141416] border border-zinc-800 p-4 rounded-2xl grid grid-cols-1 md:grid-cols-3 gap-3">
+        <input type="text" placeholder="Expense Description" required value={desc} onChange={e => setDesc(e.target.value)} className="bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-xs text-white outline-none" />
+        <input type="number" placeholder="Amount (BDT)" required value={amount} onChange={e => setAmount(e.target.value)} className="bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-xs text-white outline-none" />
+        <button type="submit" className="bg-[#C0C0C0] text-black font-semibold rounded-lg text-xs py-3">Add Expense</button>
+      </form>
+      <div className="space-y-3">
+        {expenses.map(e => (
+          <div key={e.id} className="bg-[#141416] border border-zinc-800 p-4 rounded-2xl flex justify-between items-center text-xs">
+            <span className="text-white font-medium">{e.desc}</span>
+            <span className="text-red-400 font-bold">৳ {e.amount}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
-        function deleteProduct(id) {
-            products = products.filter(p => p.id !== id);
-            saveData();
-            renderStock();
-        }
+function Finance({ orders, expenses, lang }) {
+  const sales = orders.filter(o => o.status !== 'Cancelled').reduce((a, b) => a + Number(b.grandTotal || 0), 0);
+  const exp = expenses.reduce((a, b) => a + Number(b.amount || 0), 0);
+  const net = sales - exp;
 
-        function loadPOSProducts() {
-            const select = document.getElementById('pos-product');
-            if(products.length === 0) {
-                select.innerHTML = `<option>আগে স্টক পণ্য যোগ করুন</option>`;
-                return;
-            }
-            select.innerHTML = products.map(p => `
-                <option value="${p.id}">${p.name} - ${p.size} - ${p.color} (স্টক: ${p.stock}) [৳${p.sellingPrice}]</option>
-            `).join('');
-        }
+  return (
+    <div className="space-y-6">
+      <h2 className="text-xl font-bold text-[#C0C0C0]">{lang === 'bn' ? 'লাভ ও ক্ষতি হিসাব' : 'Profit & Loss'}</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-[#141416] border border-zinc-800 p-5 rounded-2xl">
+          <p className="text-xs text-zinc-400">Gross Sales</p>
+          <h3 className="text-xl font-bold text-white mt-1">৳ {sales}</h3>
+        </div>
+        <div className="bg-[#141416] border border-zinc-800 p-5 rounded-2xl">
+          <p className="text-xs text-zinc-400">Total Expenses</p>
+          <h3 className="text-xl font-bold text-red-400 mt-1">৳ {exp}</h3>
+        </div>
+        <div className="bg-[#141416] border border-zinc-800 p-5 rounded-2xl">
+          <p className="text-xs text-zinc-400">Net Profit</p>
+          <h3 className={`text-xl font-bold mt-1 ${net >= 0 ? 'text-green-400' : 'text-red-400'}`}>৳ {net}</h3>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-        // Complete Sale / Order Generation & Stock Out
-        function completeSale() {
-            const customer = document.getElementById('pos-customer').value || 'Guest Customer';
-            const phone = document.getElementById('pos-phone').value || 'N/A';
-            const prodId = parseInt(document.getElementById('pos-product').value);
-            const qty = parseInt(document.getElementById('pos-qty').value) || 1;
+function Reports({ orders, products, expenses, lang }) {
+  return (
+    <div className="space-y-6">
+      <h2 className="text-xl font-bold text-[#C0C0C0]">{lang === 'bn' ? 'ব্যবসায়িক রিপোর্ট' : 'Reports'}</h2>
+      <div className="bg-[#141416] border border-zinc-800 p-5 rounded-2xl space-y-3 text-xs text-zinc-300">
+        <p>Total Products Recorded: <span className="text-white font-bold">{products.length}</span></p>
+        <p>Total Orders Logged: <span className="text-white font-bold">{orders.length}</span></p>
+        <p>Total Expense Records: <span className="text-white font-bold">{expenses.length}</span></p>
+      </div>
+    </div>
+  );
+}
 
-            const product = products.find(p => p.id === prodId);
-            if(!product) {
-                alert('দয়া করে সঠিক পণ্য সিলেক্ট করুন!');
-                return;
-            }
-
-            if(product.stock < qty) {
-                alert('স্টকে পর্যাপ্ত পণ্য নেই!');
-                return;
-            }
-
-            // Reduce Stock
-            product.stock -= qty;
-
-            const totalAmount = product.sellingPrice * qty;
-            const totalCost = (product.buyingPrice || 0) * qty;
-            const profit = totalAmount - totalCost;
-
-            const newOrder = {
-                id: 'VYRO-' + Math.floor(1000 + Math.random() * 9000),
-                customer,
-                phone,
-                item: `${product.name} (${product.size}, ${product.color}) x ${qty}`,
-                amount: totalAmount,
-                profit,
-                date: new Date().toLocaleDateString()
-            };
-
-            orders.unshift(newOrder);
-            saveData();
-            alert('অর্ডার সফলভাবে সম্পন্ন হয়েছে ও স্টক আপডেট হয়েছে!');
-            switchView('home');
-        }
-
-        function renderOrders() {
-            const container = document.getElementById('orders-container');
-            if(orders.length === 0) {
-                container.innerHTML = `<div class="bg-navy-800 border border-navy-700 p-6 rounded-xl text-center text-gray-400 text-sm">কোনো অর্ডার নেই।</div>`;
-                return;
-            }
-            container.innerHTML = orders.map(o => `
-                <div class="bg-navy-800 border border-navy-700 p-4 rounded-xl flex justify-between items-center text-sm">
-                    <div>
-                        <p class="font-bold text-white">অর্ডার ID: ${o.id} (${o.customer})</p>
-                        <p class="text-xs text-gray-400">পণ্য: ${o.item}</p>
-                        <p class="text-xs text-emerald-400 mt-1">টাকা: ৳${o.amount} | লাভ: ৳${o.profit}</p>
-                    </div>
-                    <span class="text-xs bg-emerald-600/30 text-emerald-400 px-2.5 py-1 rounded-full font-medium">সম্পন্ন</span>
-                </div>
-            `).join('');
-        }
-
-        // Expense Management
-        function addExpense() {
-            const title = document.getElementById('exp-title').value;
-            const amount = parseFloat(document.getElementById('exp-amount').value);
-
-            if(!title || isNaN(amount)) {
-                alert('খাতের নাম ও পরিমাণ সঠিকভাবে লিখুন!');
-                return;
-            }
-
-            expenses.push({ title, amount, date: new Date().toLocaleDateString() });
-            saveData();
-            renderExpenses();
-            alert('খরচ সফলভাবে যুক্ত হয়েছে!');
-            document.getElementById('exp-title').value = '';
-            document.getElementById('exp-amount').value = '';
-        }
-
-        function renderExpenses() {
-            const container = document.getElementById('expense-list');
-            if(expenses.length === 0) {
-                container.innerHTML = `<p class="text-center text-gray-400 text-sm py-4">কোনো খরচ নেই।</p>`;
-                return;
-            }
-            container.innerHTML = expenses.map(e => `
-                <div class="bg-navy-900 border border-navy-700 p-3 rounded-lg flex justify-between items-center text-sm">
-                    <span class="text-gray-200">${e.title}</span>
-                    <span class="text-red-400 font-bold">৳${e.amount}</span>
-                </div>
-            `).join('');
-        }
-
-        // Customers List
-        function renderCustomers() {
-            const container = document.getElementById('customers-list');
-            if(orders.length === 0) {
-                container.innerHTML = `<p class="text-center text-gray-400 text-sm py-4">কোনো কাস্টমার ডাটা নেই।</p>`;
-                return;
-            }
-            const uniqueCustomers = [...new Map(orders.map(o => [o.phone, o])).values()];
-            container.innerHTML = uniqueCustomers.map(c => `
-                <div class="bg-navy-800 border border-navy-700 p-3 rounded-lg text-sm">
-                    <p class="font-bold text-white">${c.customer}</p>
-                    <p class="text-xs text-gray-400">মোবাইল: ${c.phone}</p>
-                </div>
-            `).join('');
-        }
-
-        // Dashboard Summary Calculations
-        function updateDashboard() {
-            const totalSales = orders.reduce((sum, o) => sum + o.amount, 0);
-            const totalProfit = orders.reduce((sum, o) => sum + o.profit, 0);
-            const totalExpense = expenses.reduce((sum, e) => sum + e.amount, 0);
-            const netProfit = totalProfit - totalExpense;
-
-            document.getElementById('stat-sales').innerText = `৳ ${totalSales}`;
-            document.getElementById('stat-orders').innerText = `${orders.length} টি`;
-            document.getElementById('stat-expense').innerText = `৳ ${totalExpense}`;
-            document.getElementById('stat-profit').innerText = `৳ ${netProfit}`;
-
-            const recentContainer = document.getElementById('recent-orders-list');
-            if(orders.length === 0) {
-                recentContainer.innerHTML = `<p class="text-center text-gray-400 text-sm py-4">কোনো অর্ডার পাওয়া যায়নি।</p>`;
-            } else {
-                recentContainer.innerHTML = orders.slice(0, 3).map(o => `
-                    <div class="bg-navy-900 border border-navy-700 p-2.5 rounded-lg flex justify-between text-xs">
-                        <span class="text-white font-medium">${o.customer} (${o.item})</span>
-                        <span class="text-emerald-400 font-bold">৳${o.amount}</span>
-                    </div>
-                `).join('');
-            }
-        }
-
-        function exportData() {
-            const data = { products, orders, expenses };
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'vyro-wear-backup.json';
-            a.click();
-        }
-
-        function clearAllData() {
-            if(confirm('সব ডাটা মুছে ফেলতে চান?')) {
-                localStorage.clear();
-                products = []; orders = []; expenses = [];
-                saveData();
-                location.reload();
-            }
-        }
-
-        // Initial Load
-        updateDashboard();
-    </script>
-</body>
-</html>
+function SettingsView({ lang, setLang }) {
+  return (
+    <div className="space-y-6">
+      <h2 className="text-xl font-bold text-[#C0C0C0]">{lang === 'bn' ? 'সেটিংস' : 'Settings'}</h2>
+      <div className="bg-[#141416] border border-zinc-800 p-5 rounded-2xl space-y-4 text-xs">
+        <div>
+          <label className="text-zinc-400 block mb-1">Language / ভাষা</label>
+          <button onClick={() => setLang(lang === 'bn' ? 'en' : 'bn')} className="bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-lg text-white">
+            {lang === 'bn' ? 'Switch to English' : 'বাংলায় পরিবর্তন করুন'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
