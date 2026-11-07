@@ -1,83 +1,90 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="bn" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VYRO WEAR | Elevate Your Everyday</title>
-    <!-- Tailwind CSS CDN for styling -->
+    <title>VYRO WEAR | Premium Fashion ERP</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#09090b',
+                        cardbg: '#121215',
+                        silverborder: '#27272a'
+                    }
+                }
+            }
+        }
+    </script>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            background-color: #09090b;
-            color: #f4f4f5;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
         .silver-gradient-text {
             background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 50%, #71717a 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .silver-border {
-            border: 1px solid #27272a;
-        }
         .silver-card {
             background: #121215;
             border: 1px solid #27272a;
+            transition: all 0.2s ease;
         }
         .silver-card:hover {
             border-color: #52525b;
         }
     </style>
 </head>
-<body class="min-h-screen pb-20 md:pb-0 md:pl-64">
+<body class="bg-darkbg text-zinc-100 min-h-screen pb-24 md:pb-0 md:pl-64 font-sans">
 
     <!-- Desktop Sidebar -->
-    <aside class="hidden md:flex flex-col w-64 h-screen fixed left-0 top-0 bg-zinc-950 silver-border border-r border-zinc-800 p-4 space-y-6">
-        <div class="px-2">
-            <h1 class="text-2xl font-bold tracking-wider silver-gradient-text">VYRO WEAR</h1>
-            <p class="text-[10px] tracking-widest text-zinc-400 mt-0.5 uppercase">ELEVATE YOUR EVERYDAY</p>
+    <aside class="hidden md:flex flex-col w-64 h-screen fixed left-0 top-0 bg-zinc-950 border-r border-zinc-800 p-4 space-y-6 z-40">
+        <div class="px-2 pt-2">
+            <h1 class="text-xl font-bold tracking-wider silver-gradient-text">VYRO WEAR</h1>
+            <p class="text-[9px] tracking-widest text-zinc-400 mt-0.5 uppercase">ELEVATE YOUR EVERYDAY</p>
         </div>
 
-        <nav class="flex-1 space-y-1 text-sm font-medium">
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-zinc-800 text-white border border-zinc-700">
-                <i class="fa-solid fa-chart-line text-zinc-300"></i>
+        <nav class="flex-1 space-y-1.5 text-xs font-medium overflow-y-auto pr-1">
+            <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg bg-zinc-800 text-white border border-zinc-700 transition">
+                <i class="fa-solid fa-chart-line w-4 text-zinc-300"></i>
                 <span>Executive Dashboard</span>
-            </a>
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
-                <i class="fa-solid fa-shirt"></i>
-                <span>পণ্য ও ভ্যারিয়েন্ট (Products)</span>
-            </a>
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
-                <i class="fa-solid fa-boxes-stacked"></i>
-                <span>ইনভেন্টরি (Stock)</span>
-            </a>
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
-                <i class="fa-solid fa-industry"></i>
-                <span>প্রোডাকশন (Production)</span>
-            </a>
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
-                <i class="fa-solid fa-cart-shopping"></i>
-                <span>অর্ডারসমূহ (Orders)</span>
-            </a>
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
-                <i class="fa-solid fa-cash-register"></i>
-                <span>POS & সেলস</span>
-            </a>
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
-                <i class="fa-solid fa-wallet"></i>
-                <span>হিসাব ও লাভ-ক্ষতি (P&L)</span>
-            </a>
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
-                <i class="fa-solid fa-robot"></i>
-                <span>AI Assistant</span>
-            </a>
+            </button>
+            <button onclick="switchTab('products')" id="nav-products" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
+                <i class="fa-solid fa-shirt w-4"></i>
+                <span>পণ্যের ক্যাটালগ ও ম্যাট্রিক্স</span>
+            </button>
+            <button onclick="switchTab('inventory')" id="nav-inventory" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
+                <i class="fa-solid fa-boxes-stacked w-4"></i>
+                <span>ইনভেন্টরি ও স্টক</span>
+            </button>
+            <button onclick="switchTab('production')" id="nav-production" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
+                <i class="fa-solid fa-industry w-4"></i>
+                <span>প্রোডাকশন ও BOM</span>
+            </button>
+            <button onclick="switchTab('orders')" id="nav-orders" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
+                <i class="fa-solid fa-cart-shopping w-4"></i>
+                <span>অর্ডার ম্যানেজমেন্ট</span>
+            </button>
+            <button onclick="switchTab('pos')" id="nav-pos" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
+                <i class="fa-solid fa-cash-register w-4"></i>
+                <span>POS & কুইক সেলস</span>
+            </button>
+            <button onclick="switchTab('finance')" id="nav-finance" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
+                <i class="fa-solid fa-wallet w-4"></i>
+                <span>ফাইন্যান্স ও P&L</span>
+            </button>
+            <button onclick="switchTab('ai')" id="nav-ai" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
+                <i class="fa-solid fa-robot w-4 text-emerald-400"></i>
+                <span>AI Business Assistant</span>
+            </button>
         </nav>
 
         <div class="border-t border-zinc-800 pt-4">
             <div class="flex items-center gap-3 px-2">
-                <div class="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center font-bold text-xs text-white">VW</div>
+                <div class="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center font-bold text-xs text-white">VW</div>
                 <div>
                     <p class="text-xs font-semibold text-white">Owner Admin</p>
                     <p class="text-[10px] text-zinc-400">owner@vyrowear.com</p>
@@ -87,164 +94,302 @@
     </aside>
 
     <!-- Mobile Header -->
-    <header class="md:hidden flex items-center justify-between p-4 bg-zinc-950 border-b border-zinc-800 sticky top-0 z-50">
+    <header class="md:hidden flex items-center justify-between p-4 bg-zinc-950 border-b border-zinc-800 sticky top-0 z-40">
         <div>
-            <h1 class="text-xl font-bold tracking-wider silver-gradient-text">VYRO WEAR</h1>
-            <p class="text-[8px] tracking-widest text-zinc-400 uppercase">ELEVATE YOUR EVERYDAY</p>
+            <h1 class="text-lg font-bold tracking-wider silver-gradient-text">VYRO WEAR</h1>
+            <p class="text-[7px] tracking-widest text-zinc-400 uppercase">ELEVATE YOUR EVERYDAY</p>
         </div>
-        <button class="text-zinc-300 p-2"><i class="fa-solid fa-bars text-lg"></i></button>
+        <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="text-xs text-zinc-300 font-mono">Live ERP</span>
+        </div>
     </header>
 
-    <!-- Main Content Area -->
-    <main class="p-4 md:p-8 space-y-6">
+    <!-- Main Content Area Container -->
+    <main class="p-4 md:p-8 max-w-7xl mx-auto space-y-6">
 
-        <!-- Top Header & Filter -->
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div>
-                <h2 class="text-2xl font-bold text-white tracking-wide">Executive Dashboard</h2>
-                <p class="text-xs text-zinc-400">ব্যবসার লাইভ পারফরম্যান্স ও হিসাব ওভারভিউ</p>
-            </div>
-            <div class="flex gap-2 bg-zinc-900 p-1 rounded-lg border border-zinc-800 text-xs">
-                <button class="px-3 py-1.5 rounded bg-zinc-800 text-white font-medium">আজ</button>
-                <button class="px-3 py-1.5 rounded text-zinc-400 hover:text-white">গত ৭ দিন</button>
-                <button class="px-3 py-1.5 rounded text-zinc-400 hover:text-white">এই মাস</button>
-            </div>
-        </div>
-
-        <!-- Metric Cards Grid -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="silver-card p-4 rounded-xl space-y-2">
-                <span class="text-xs text-zinc-400">মোট বিক্রয় (Total Sales)</span>
-                <p class="text-xl md:text-2xl font-bold text-white">৳ ১২,৫০,০০০</p>
-                <span class="text-[11px] text-emerald-400 flex items-center gap-1"><i class="fa-solid fa-arrow-up"></i> +১২.৫% গত মাস থেকে</span>
+        <!-- TAB 1: EXECUTIVE DASHBOARD -->
+        <section id="tab-dashboard" class="space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-xl md:text-2xl font-bold text-white tracking-wide">Executive Dashboard</h2>
+                    <p class="text-xs text-zinc-400">ব্যবসার লাইভ পারফরম্যান্স ও ফাইন্যান্সিয়াল কমান্ড সেন্টার</p>
+                </div>
+                <div class="flex gap-1.5 bg-zinc-900 p-1 rounded-lg border border-zinc-800 text-xs">
+                    <button class="px-3 py-1.5 rounded bg-zinc-800 text-white font-medium">আজ</button>
+                    <button class="px-3 py-1.5 rounded text-zinc-400 hover:text-white">গত ৭ দিন</button>
+                    <button class="px-3 py-1.5 rounded text-zinc-400 hover:text-white">এই মাস</button>
+                </div>
             </div>
 
-            <div class="silver-card p-4 rounded-xl space-y-2">
-                <span class="text-xs text-zinc-400">মোট অর্ডার (Orders)</span>
-                <p class="text-xl md:text-2xl font-bold text-white">৮৫০ টি</p>
-                <span class="text-[11px] text-zinc-400">ডিলেভার্ড: ৭২০ | পেন্ডিং: ৫০</span>
+            <!-- Metrics Grid -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="silver-card p-4 rounded-xl space-y-2">
+                    <span class="text-xs text-zinc-400">মোট বিক্রয় (Revenue)</span>
+                    <p class="text-xl md:text-2xl font-bold text-white">৳ ১২,৫০,০০০</p>
+                    <span class="text-[10px] text-emerald-400 flex items-center gap-1"><i class="fa-solid fa-arrow-up"></i> +১২.৫% গত মাস থেকে</span>
+                </div>
+                <div class="silver-card p-4 rounded-xl space-y-2">
+                    <span class="text-xs text-zinc-400">মোট অর্ডার (Orders)</span>
+                    <p class="text-xl md:text-2xl font-bold text-white">৮৫০ টি</p>
+                    <span class="text-[10px] text-zinc-400">ডেলিভার্ড: ৭২০ | পেন্ডিং: ৫০</span>
+                </div>
+                <div class="silver-card p-4 rounded-xl space-y-2">
+                    <span class="text-xs text-zinc-400">মোট খরচ (Expenses)</span>
+                    <p class="text-xl md:text-2xl font-bold text-white">৳ ৪,২০,০০০</p>
+                    <span class="text-[10px] text-zinc-400">COGS + র ম্যাটেরিয়াল + অপস্</span>
+                </div>
+                <div class="silver-card p-4 rounded-xl space-y-2">
+                    <span class="text-xs text-zinc-400">নিট প্রফিট (Net Profit)</span>
+                    <p class="text-xl md:text-2xl font-bold text-emerald-400">৳ ৩,৮০,০০০</p>
+                    <span class="text-[10px] text-emerald-400">প্রফিট মার্জিন: ৩০.৪%</span>
+                </div>
             </div>
 
-            <div class="silver-card p-4 rounded-xl space-y-2">
-                <span class="text-xs text-zinc-400">মোট খরচ (Expenses)</span>
-                <p class="text-xl md:text-2xl font-bold text-white">৳ ৪,২০,০০০</p>
-                <span class="text-[11px] text-zinc-400">COGS + মেটেরিয়াল + অপারেশন</span>
+            <!-- Variant Stock Matrix Preview -->
+            <div class="silver-card p-5 rounded-xl space-y-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="font-semibold text-white text-sm md:text-base">Size & Color Variant Stock (Oversized T-Shirt)</h3>
+                        <p class="text-[11px] text-zinc-400">প্রতিটি ভ্যারিয়েন্টের আলাদা ইনভেন্টরি ট্র্যাকিং</p>
+                    </div>
+                    <span class="text-[10px] bg-zinc-800 text-zinc-300 px-2.5 py-1 rounded border border-zinc-700">SKU Matrix Active</span>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs text-left text-zinc-300">
+                        <thead class="bg-zinc-900 text-zinc-400 uppercase text-[10px]">
+                            <tr>
+                                <th class="p-3">Size / Color</th>
+                                <th class="p-3">Black</th>
+                                <th class="p-3">White</th>
+                                <th class="p-3">Navy</th>
+                                <th class="p-3">Total Stock</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-zinc-800">
+                            <tr>
+                                <td class="p-3 font-semibold text-white">S</td>
+                                <td class="p-3"><span class="bg-zinc-900 px-2 py-1 rounded border border-zinc-800 text-white">10 pcs</span></td>
+                                <td class="p-3"><span class="bg-zinc-900 px-2 py-1 rounded border border-zinc-800 text-white">8 pcs</span></td>
+                                <td class="p-3"><span class="bg-amber-950/50 text-amber-400 border border-amber-800/50 px-2 py-1 rounded">5 pcs (Low)</span></td>
+                                <td class="p-3 font-semibold text-white">23 pcs</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-semibold text-white">M</td>
+                                <td class="p-3"><span class="bg-zinc-900 px-2 py-1 rounded border border-zinc-800 text-white">15 pcs</span></td>
+                                <td class="p-3"><span class="bg-zinc-900 px-2 py-1 rounded border border-zinc-800 text-white">12 pcs</span></td>
+                                <td class="p-3"><span class="bg-zinc-900 px-2 py-1 rounded border border-zinc-800 text-white">9 pcs</span></td>
+                                <td class="p-3 font-semibold text-white">36 pcs</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-semibold text-white">L</td>
+                                <td class="p-3"><span class="bg-zinc-900 px-2 py-1 rounded border border-zinc-800 text-white">12 pcs</span></td>
+                                <td class="p-3"><span class="bg-zinc-900 px-2 py-1 rounded border border-zinc-800 text-white">10 pcs</span></td>
+                                <td class="p-3"><span class="bg-zinc-900 px-2 py-1 rounded border border-zinc-800 text-white">7 pcs</span></td>
+                                <td class="p-3 font-semibold text-white">29 pcs</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-            <div class="silver-card p-4 rounded-xl space-y-2">
-                <span class="text-xs text-zinc-400">খাঁটি লাভ (Net Profit)</span>
-                <p class="text-xl md:text-2xl font-bold text-emerald-400">৳ ৩,৮০,০০০</p>
-                <span class="text-[11px] text-emerald-400">মার্জিন: ৩০.৪%</span>
+            <!-- Recent Orders Table -->
+            <div class="silver-card p-5 rounded-xl space-y-4">
+                <div class="flex justify-between items-center">
+                    <h3 class="font-semibold text-white text-sm md:text-base">সাম্প্রতিক অর্ডারসমূহ (Recent Orders)</h3>
+                    <button onclick="switchTab('orders')" class="text-xs text-zinc-400 hover:text-white underline">সব দেখুন</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs text-left text-zinc-300">
+                        <thead class="bg-zinc-900 text-zinc-400 uppercase text-[10px]">
+                            <tr>
+                                <th class="p-3">অর্ডার ID</th>
+                                <th class="p-3">গ্রাহক</th>
+                                <th class="p-3">পেমেন্ট মেথড</th>
+                                <th class="p-3">কুরিয়ার ট্র্যাকিং</th>
+                                <th class="p-3">টাকা</th>
+                                <th class="p-3">স্ট্যাটাস</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-zinc-800">
+                            <tr>
+                                <td class="p-3 font-mono text-zinc-400">#VW-1085</td>
+                                <td class="p-3 text-white font-medium">Tanvir Ahmed</td>
+                                <td class="p-3">bKash (Advance)</td>
+                                <td class="p-3 text-zinc-400">Steadfast (ID: 98412)</td>
+                                <td class="p-3 font-semibold text-white">৳ ২,৪৫০</td>
+                                <td class="p-3"><span class="bg-amber-950/60 text-amber-400 border border-amber-800/50 px-2 py-0.5 rounded text-[10px]">Processing</span></td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-mono text-zinc-400">#VW-1084</td>
+                                <td class="p-3 text-white font-medium">Rahim Chowdhury</td>
+                                <td class="p-3">Cash on Delivery</td>
+                                <td class="p-3 text-zinc-400">Pathao (ID: 55419)</td>
+                                <td class="p-3 font-semibold text-white">৳ ১,৮৫০</td>
+                                <td class="p-3"><span class="bg-emerald-950/60 text-emerald-400 border border-emerald-800/50 px-2 py-0.5 rounded text-[10px]">Delivered</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Size & Color Variant Matrix Preview -->
-        <div class="silver-card p-5 rounded-xl space-y-4">
+        <!-- TAB 2: PRODUCTS -->
+        <section id="tab-products" class="space-y-6 hidden">
             <div class="flex justify-between items-center">
-                <h3 class="font-semibold text-white">Size & Color Variant Stock (Oversized T-Shirt)</h3>
-                <span class="text-xs bg-zinc-800 text-zinc-300 px-2.5 py-1 rounded border border-zinc-700">SKU Matrix</span>
+                <div>
+                    <h2 class="text-xl font-bold text-white">Product & Variant Management</h2>
+                    <p class="text-xs text-zinc-400">নতুন পণ্য যোগ করুন ও ভ্যারিয়েন্ট ম্যাট্রিক্স কনফিগার করুন</p>
+                </div>
+                <button onclick="alert('পণ্য যোগ করার ফর্ম ওপেন হয়েছে!')" class="bg-white text-zinc-950 hover:bg-zinc-200 px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i> নতুন পণ্য যোগ করুন
+                </button>
             </div>
-            
-            <div class="overflow-x-auto">
-                <table class="w-full text-xs text-left text-zinc-300">
-                    <thead class="bg-zinc-900 text-zinc-400 uppercase text-[10px]">
-                        <tr>
-                            <th class="p-3">Size / Color</th>
-                            <th class="p-3">Black</th>
-                            <th class="p-3">White</th>
-                            <th class="p-3">Navy</th>
-                            <th class="p-3">Total Stock</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-zinc-800">
-                        <tr>
-                            <td class="p-3 font-semibold text-white">S</td>
-                            <td class="p-3"><span class="bg-zinc-800 px-2 py-1 rounded text-white">10</span></td>
-                            <td class="p-3"><span class="bg-zinc-800 px-2 py-1 rounded text-white">8</span></td>
-                            <td class="p-3"><span class="bg-zinc-800 px-2 py-1 rounded text-amber-400">5 (Low)</span></td>
-                            <td class="p-3 font-semibold">23 pcs</td>
-                        </tr>
-                        <tr>
-                            <td class="p-3 font-semibold text-white">M</td>
-                            <td class="p-3"><span class="bg-zinc-800 px-2 py-1 rounded text-white">15</span></td>
-                            <td class="p-3"><span class="bg-zinc-800 px-2 py-1 rounded text-white">12</span></td>
-                            <td class="p-3"><span class="bg-zinc-800 px-2 py-1 rounded text-white">9</span></td>
-                            <td class="p-3 font-semibold">36 pcs</td>
-                        </tr>
-                        <tr>
-                            <td class="p-3 font-semibold text-white">L</td>
-                            <td class="p-3"><span class="bg-zinc-800 px-2 py-1 rounded text-white">12</span></td>
-                            <td class="p-3"><span class="bg-zinc-800 px-2 py-1 rounded text-white">10</span></td>
-                            <td class="p-3"><span class="bg-zinc-800 px-2 py-1 rounded text-white">7</span></td>
-                            <td class="p-3 font-semibold">29 pcs</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="silver-card p-6 rounded-xl text-center space-y-3">
+                <i class="fa-solid fa-shirt text-3xl text-zinc-500"></i>
+                <h3 class="font-semibold text-white">VYRO WEAR Premium Catalog</h3>
+                <p class="text-xs text-zinc-400 max-w-md mx-auto">এখানে প্রতিটি প্রোডাক্টের SKU, Barcode, Selling Price এবং Purchase Cost সুনির্দিষ্টভাবে সংরক্ষিত আছে।</p>
             </div>
-        </div>
+        </section>
 
-        <!-- Recent Orders Table -->
-        <div class="silver-card p-5 rounded-xl space-y-4">
-            <h3 class="font-semibold text-white">সাম্প্রতিক অর্ডারসমূহ (Recent Orders)</h3>
-            <div class="overflow-x-auto">
-                <table class="w-full text-xs text-left text-zinc-300">
-                    <thead class="bg-zinc-900 text-zinc-400 uppercase text-[10px]">
-                        <tr>
-                            <th class="p-3">অর্ডার ID</th>
-                            <th class="p-3">গ্রাহক</th>
-                            <th class="p-3">পেমেন্ট মেথড</th>
-                            <th class="p-3">কুরিয়ার স্ট্যাটাস</th>
-                            <th class="p-3">মোট টাকা</th>
-                            <th class="p-3">স্ট্যাটাস</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-zinc-800">
-                        <tr>
-                            <td class="p-3 font-mono text-zinc-400">#VW-1085</td>
-                            <td class="p-3 text-white">Tanvir Ahmed</td>
-                            <td class="p-3">bKash (Advance)</td>
-                            <td class="p-3 text-zinc-400">Steadfast (ID: 98412)</td>
-                            <td class="p-3 font-semibold text-white">৳ ২,৪৫০</td>
-                            <td class="p-3"><span class="bg-amber-950 text-amber-400 border border-amber-800 px-2 py-0.5 rounded text-[10px]">Processing</span></td>
-                        </tr>
-                        <tr>
-                            <td class="p-3 font-mono text-zinc-400">#VW-1084</td>
-                            <td class="p-3 text-white">Rahim Chowdhury</td>
-                            <td class="p-3">Cash on Delivery</td>
-                            <td class="p-3 text-zinc-400">Pathao (ID: 55419)</td>
-                            <td class="p-3 font-semibold text-white">৳ ১,৮৫০</td>
-                            <td class="p-3"><span class="bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded text-[10px]">Delivered</span></td>
-                        </tr>
-                    </tbody>
-                </table>
+        <!-- TAB 3: INVENTORY -->
+        <section id="tab-inventory" class="space-y-6 hidden">
+            <h2 class="text-xl font-bold text-white">Inventory & Stock Control</h2>
+            <div class="silver-card p-6 rounded-xl text-center space-y-3">
+                <i class="fa-solid fa-boxes-stacked text-3xl text-zinc-500"></i>
+                <h3 class="font-semibold text-white">রিয়েল-টাইম স্টক ট্র্যাকিং</h3>
+                <p class="text-xs text-zinc-400">অর্ডার কনফার্ম বা ডেলিভারি হলে স্বয়ংক্রিয়ভাবে স্টক আপডেট হয়। নেগেটিভ স্টক প্রতিরোধ ব্যবস্থা সক্রিয় রয়েছে।</p>
             </div>
-        </div>
+        </section>
+
+        <!-- TAB 4: PRODUCTION -->
+        <section id="tab-production" class="space-y-6 hidden">
+            <h2 class="text-xl font-bold text-white">Production & Bill of Materials (BOM)</h2>
+            <div class="silver-card p-6 rounded-xl text-center space-y-3">
+                <i class="fa-solid fa-industry text-3xl text-zinc-500"></i>
+                <h3 class="font-semibold text-white">ফ্যাশন প্রোডাকশন ব্যাচ ম্যানেজমেন্ট</h3>
+                <p class="text-xs text-zinc-400">প্রোডাকশন সম্পন্ন হলে কাঁচামাল (Fabric, Buttons) কেটে ফিনিশড পণ্য স্টকে যুক্ত হয়।</p>
+            </div>
+        </section>
+
+        <!-- TAB 5: ORDERS -->
+        <section id="tab-orders" class="space-y-6 hidden">
+            <h2 class="text-xl font-bold text-white">Order Management System</h2>
+            <div class="silver-card p-6 rounded-xl text-center space-y-3">
+                <i class="fa-solid fa-cart-shopping text-3xl text-zinc-500"></i>
+                <h3 class="font-semibold text-white">সকল অর্ডার লিস্ট ও কুরিয়ার স্ট্যাটাস</h3>
+                <p class="text-xs text-zinc-400">Steadfast, Pathao ও RedX ইন্টিগ্রেশনের মাধ্যমে কুরিয়ার কনসাইনমেন্ট তৈরি করুন।</p>
+            </div>
+        </section>
+
+        <!-- TAB 6: POS -->
+        <section id="tab-pos" class="space-y-6 hidden">
+            <h2 class="text-xl font-bold text-white">POS & Quick Sales Interface</h2>
+            <div class="silver-card p-6 rounded-xl text-center space-y-3">
+                <i class="fa-solid fa-cash-register text-3xl text-zinc-500"></i>
+                <h3 class="font-semibold text-white">ফাস্ট পয়েন্ট অব সেলস (POS)</h3>
+                <p class="text-xs text-zinc-400">বারকোড স্ক্যান করে তাৎক্ষণিকভাবে ইনভয়েস তৈরি ও পেমেন্ট রিসিভ করুন।</p>
+            </div>
+        </section>
+
+        <!-- TAB 7: FINANCE -->
+        <section id="tab-finance" class="space-y-6 hidden">
+            <h2 class="text-xl font-bold text-white">Finance, Expenses & P&L</h2>
+            <div class="silver-card p-6 rounded-xl text-center space-y-3">
+                <i class="fa-solid fa-wallet text-3xl text-zinc-500"></i>
+                <h3 class="font-semibold text-white">লাভ-ক্ষতি ও খরচ লেজার</h3>
+                <p class="text-xs text-zinc-400">দোকান ভাড়া, মার্কেটিং খরচ এবং COGS বাদ দিয়ে রিয়েল-টাইম নিট প্রফিট হিসাব করুন।</p>
+            </div>
+        </section>
+
+        <!-- TAB 8: AI ASSISTANT -->
+        <section id="tab-ai" class="space-y-6 hidden">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h2 class="text-xl font-bold text-white">AI Business Assistant</h2>
+                    <p class="text-xs text-zinc-400">আপনার ব্র্যান্ডের ডাটা অ্যানালাইসিস করতে এআই-কে যেকোনো প্রশ্ন করুন</p>
+                </div>
+                <span class="bg-emerald-950/60 text-emerald-400 border border-emerald-800 px-3 py-1 rounded-full text-xs font-medium">Online</span>
+            </div>
+
+            <div class="silver-card p-4 rounded-xl space-y-4">
+                <div class="bg-zinc-900 p-3 rounded-lg text-xs space-y-2 border border-zinc-800">
+                    <p class="text-zinc-400">🤖 **AI Assistant:** হ্যালো ওনার! আজ আপনার মোট সেলস ১২,৫০,০০০ টাকা এবং নিট প্রফিট ৩,৮০,০০০ টাকা। কোনো নির্দিষ্ট বিষয় জানতে চান?</p>
+                </div>
+
+                <div class="flex gap-2">
+                    <input type="text" placeholder="যেমন: এই মাসে কোন সাইজটি সবচেয়ে বেশি বিক্রি হয়েছে?" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-zinc-600">
+                    <button onclick="alert('AI মেসেজ প্রসেস করা হচ্ছে...')" class="bg-white text-zinc-950 px-4 py-2 rounded-lg text-xs font-semibold hover:bg-zinc-200">জিজ্ঞাসা করুন</button>
+                </div>
+            </div>
+        </section>
 
     </main>
 
     <!-- Mobile Bottom Navigation Bar -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-zinc-950 border-t border-zinc-800 flex justify-around py-2 text-zinc-400 z-50">
-        <a href="#" class="flex flex-col items-center gap-1 text-white text-[10px]">
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-zinc-950 border-t border-zinc-800 flex justify-around py-2.5 text-zinc-400 z-50">
+        <button onclick="switchTab('dashboard')" class="mobile-nav-btn flex flex-col items-center gap-1 text-white text-[10px]" data-tab="dashboard">
             <i class="fa-solid fa-chart-line text-sm"></i>
             <span>Dashboard</span>
-        </a>
-        <a href="#" class="flex flex-col items-center gap-1 hover:text-white text-[10px]">
+        </button>
+        <button onclick="switchTab('products')" class="mobile-nav-btn flex flex-col items-center gap-1 hover:text-white text-[10px]" data-tab="products">
             <i class="fa-solid fa-shirt text-sm"></i>
             <span>Products</span>
-        </a>
-        <a href="#" class="flex flex-col items-center gap-1 hover:text-white text-[10px]">
+        </button>
+        <button onclick="switchTab('orders')" class="mobile-nav-btn flex flex-col items-center gap-1 hover:text-white text-[10px]" data-tab="orders">
             <i class="fa-solid fa-cart-shopping text-sm"></i>
             <span>Orders</span>
-        </a>
-        <a href="#" class="flex flex-col items-center gap-1 hover:text-white text-[10px]">
+        </button>
+        <button onclick="switchTab('pos')" class="mobile-nav-btn flex flex-col items-center gap-1 hover:text-white text-[10px]" data-tab="pos">
             <i class="fa-solid fa-cash-register text-sm"></i>
             <span>POS</span>
-        </a>
-        <a href="#" class="flex flex-col items-center gap-1 hover:text-white text-[10px]">
+        </button>
+        <button onclick="switchTab('ai')" class="mobile-nav-btn flex flex-col items-center gap-1 hover:text-emerald-400 text-[10px]" data-tab="ai">
             <i class="fa-solid fa-robot text-sm"></i>
             <span>AI Bot</span>
-        </a>
+        </button>
     </nav>
 
+    <!-- Tab Switching JavaScript -->
+    <script>
+        function switchTab(tabId) {
+            // Hide all sections
+            const tabs = ['dashboard', 'products', 'inventory', 'production', 'orders', 'pos', 'finance', 'ai'];
+            tabs.forEach(t => {
+                const el = document.getElementById('tab-' + t);
+                if (el) el.classList.add('hidden');
+                
+                // Desktop nav reset
+                const navBtn = document.getElementById('nav-' + t);
+                if (navBtn) {
+                    navBtn.className = "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition";
+                }
+            });
+
+            // Show selected tab
+            const activeEl = document.getElementById('tab-' + tabId);
+            if (activeEl) activeEl.classList.remove('hidden');
+
+            // Highlight desktop nav
+            const activeNav = document.getElementById('nav-' + tabId);
+            if (activeNav) {
+                activeNav.className = "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg bg-zinc-800 text-white border border-zinc-700 transition";
+            }
+
+            // Highlight mobile nav
+            document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+                if (btn.getAttribute('data-tab') === tabId) {
+                    btn.classList.add('text-white');
+                    btn.classList.remove('text-zinc-400');
+                } else {
+                    btn.classList.remove('text-white');
+                    btn.classList.add('text-zinc-400');
+                }
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
 </body>
 </html>
