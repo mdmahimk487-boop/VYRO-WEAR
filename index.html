@@ -1,554 +1,250 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VYRO WEAR — Enterprise Fashion ERP</title>
-    <!-- Tailwind CSS CDN -->
+    <title>VYRO WEAR | Elevate Your Everyday</title>
+    <!-- Tailwind CSS CDN for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Chart.js for Analytics -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        silver: {
-                            100: '#f3f4f6',
-                            200: '#e5e7eb',
-                            300: '#d1d5db',
-                            400: '#9ca3af',
-                            500: '#6b7280',
-                            600: '#4b5563',
-                            700: '#374151',
-                            800: '#1f2937',
-                            900: '#111827',
-                            accent: '#C0C0C0',
-                            glow: '#E5E7EB'
-                        },
-                        brand: {
-                            black: '#0A0A0A',
-                            darkCard: '#121212',
-                            border: '#262626'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
     <style>
         body {
-            background-color: #050505;
-            color: #E5E7EB;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #09090b;
+            color: #f4f4f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         .silver-gradient-text {
-            background: linear-gradient(135deg, #FFFFFF 0%, #A1A1AA 50%, #71717A 100%);
+            background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 50%, #71717a 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .silver-border-glow {
-            border: 1px solid rgba(212, 212, 216, 0.15);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.03);
+        .silver-border {
+            border: 1px solid #27272a;
         }
-        .silver-border-glow:hover {
-            border: 1px solid rgba(212, 212, 216, 0.35);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
+        .silver-card {
+            background: #121215;
+            border: 1px solid #27272a;
         }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0A0A0A;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #27272A;
-            border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #3F3F46;
+        .silver-card:hover {
+            border-color: #52525b;
         }
     </style>
 </head>
-<body class="h-screen flex overflow-hidden">
+<body class="min-h-screen pb-20 md:pb-0 md:pl-64">
 
-    <!-- SIDEBAR NAVIGATION -->
-    <aside id="sidebar" class="w-64 bg-brand-black border-r border-brand-border flex flex-col justify-between transition-all duration-300 z-30">
-        <div>
-            <!-- Brand Logo Header -->
-            <div class="h-16 flex items-center px-6 border-b border-brand-border justify-between">
-                <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-zinc-400 to-zinc-100 flex items-center justify-center text-black font-extrabold text-sm tracking-tighter">
-                        VW
-                    </div>
-                    <div>
-                        <h1 class="font-bold tracking-widest text-lg silver-gradient-text">VYRO WEAR</h1>
-                        <p class="text-[9px] tracking-widest text-zinc-500 uppercase font-medium">ELEVATE YOUR EVERYDAY</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Navigation Links -->
-            <nav class="p-4 space-y-1 text-sm font-medium overflow-y-auto max-h-[calc(100vh-140px)]">
-                <a href="#" onclick="switchTab('dashboard')" class="nav-item active flex items-center px-3 py-2.5 rounded-lg text-zinc-200 bg-zinc-900 border border-zinc-800 transition">
-                    <i class="fa-solid fa-chart-line w-6 text-zinc-400"></i> Owner Dashboard
-                </a>
-                <a href="#" onclick="switchTab('products')" class="nav-item flex items-center px-3 py-2.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition">
-                    <i class="fa-solid fa-shirt w-6 text-zinc-400"></i> Product & SKUs
-                </a>
-                <a href="#" onclick="switchTab('inventory')" class="nav-item flex items-center px-3 py-2.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition">
-                    <i class="fa-solid fa-boxes-stacked w-6 text-zinc-400"></i> Inventory & Stock
-                </a>
-                <a href="#" onclick="switchTab('production')" class="nav-item flex items-center px-3 py-2.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition">
-                    <i class="fa-solid fa-industry w-6 text-zinc-400"></i> Production & Fabrics
-                </a>
-                <a href="#" onclick="switchTab('pos')" class="nav-item flex items-center px-3 py-2.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition">
-                    <i class="fa-solid fa-cash-register w-6 text-zinc-400"></i> POS Terminal
-                </a>
-                <a href="#" onclick="switchTab('orders')" class="nav-item flex items-center px-3 py-2.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition">
-                    <i class="fa-solid fa-truck-fast w-6 text-zinc-400"></i> Orders & Courier
-                </a>
-                <a href="#" onclick="switchTab('crm')" class="nav-item flex items-center px-3 py-2.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition">
-                    <i class="fa-solid fa-users w-6 text-zinc-400"></i> Customer CRM
-                </a>
-                <a href="#" onclick="switchTab('finance')" class="nav-item flex items-center px-3 py-2.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition">
-                    <i class="fa-solid fa-file-invoice-dollar w-6 text-zinc-400"></i> Finance & Accounting
-                </a>
-                <a href="#" onclick="switchTab('hr')" class="nav-item flex items-center px-3 py-2.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition">
-                    <i class="fa-solid fa-user-gear w-6 text-zinc-400"></i> HR & Payroll
-                </a>
-                <a href="#" onclick="switchTab('ai')" class="nav-item flex items-center px-3 py-2.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition">
-                    <i class="fa-solid fa-brain w-6 text-zinc-400"></i> AI Business Assistant
-                </a>
-            </nav>
+    <!-- Desktop Sidebar -->
+    <aside class="hidden md:flex flex-col w-64 h-screen fixed left-0 top-0 bg-zinc-950 silver-border border-r border-zinc-800 p-4 space-y-6">
+        <div class="px-2">
+            <h1 class="text-2xl font-bold tracking-wider silver-gradient-text">VYRO WEAR</h1>
+            <p class="text-[10px] tracking-widest text-zinc-400 mt-0.5 uppercase">ELEVATE YOUR EVERYDAY</p>
         </div>
 
-        <!-- User Profile Footer -->
-        <div class="p-4 border-t border-brand-border flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-9 h-9 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center font-bold text-xs text-zinc-200">
-                    AD
-                </div>
+        <nav class="flex-1 space-y-1 text-sm font-medium">
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-zinc-800 text-white border border-zinc-700">
+                <i class="fa-solid fa-chart-line text-zinc-300"></i>
+                <span>Executive Dashboard</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
+                <i class="fa-solid fa-shirt"></i>
+                <span>পণ্য ও ভ্যারিয়েন্ট (Products)</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <span>ইনভেন্টরি (Stock)</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
+                <i class="fa-solid fa-industry"></i>
+                <span>প্রোডাকশন (Production)</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span>অর্ডারসমূহ (Orders)</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
+                <i class="fa-solid fa-cash-register"></i>
+                <span>POS & সেলস</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
+                <i class="fa-solid fa-wallet"></i>
+                <span>হিসাব ও লাভ-ক্ষতি (P&L)</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
+                <i class="fa-solid fa-robot"></i>
+                <span>AI Assistant</span>
+            </a>
+        </nav>
+
+        <div class="border-t border-zinc-800 pt-4">
+            <div class="flex items-center gap-3 px-2">
+                <div class="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center font-bold text-xs text-white">VW</div>
                 <div>
-                    <p class="text-sm font-semibold text-zinc-200">Admin User</p>
-                    <p class="text-xs text-zinc-500">System Owner</p>
+                    <p class="text-xs font-semibold text-white">Owner Admin</p>
+                    <p class="text-[10px] text-zinc-400">owner@vyrowear.com</p>
                 </div>
             </div>
-            <button title="System Settings" class="text-zinc-500 hover:text-white transition">
-                <i class="fa-solid fa-gear"></i>
-            </button>
         </div>
     </aside>
 
-    <!-- MAIN CONTENT AREA -->
-    <main class="flex-1 flex flex-col min-w-0 overflow-hidden bg-[#070707]">
-
-        <!-- Top Header -->
-        <header class="h-16 border-b border-brand-border px-6 flex items-center justify-between bg-brand-black/50 backdrop-blur-md">
-            <div class="flex items-center space-x-4">
-                <button id="menu-toggle" class="text-zinc-400 hover:text-white">
-                    <i class="fa-solid fa-bars text-lg"></i>
-                </button>
-                <div class="relative w-64 md:w-80">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-zinc-500 text-sm"></i>
-                    <input type="text" placeholder="Search orders, SKUs, customers..." class="w-full bg-zinc-900/80 border border-zinc-800 rounded-lg pl-9 pr-4 py-1.5 text-xs text-zinc-200 focus:outline-none focus:border-zinc-500 transition">
-                </div>
-            </div>
-
-            <div class="flex items-center space-x-4">
-                <!-- Location & Locale -->
-                <div class="hidden md:flex items-center space-x-2 text-xs bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-lg text-zinc-300">
-                    <i class="fa-solid fa-location-dot text-zinc-500"></i>
-                    <span>Dhaka Central HQ</span>
-                    <span class="text-zinc-600">|</span>
-                    <span class="font-semibold text-white">BDT (৳)</span>
-                </div>
-
-                <!-- Notifications -->
-                <button class="relative p-2 text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-900 transition">
-                    <i class="fa-regular fa-bell"></i>
-                    <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-red-500"></span>
-                </button>
-            </div>
-        </header>
-
-        <!-- Dynamic Container Views -->
-        <div class="flex-1 overflow-y-auto p-6" id="main-view">
-
-            <!-- MODULE 1: OWNER DASHBOARD -->
-            <section id="dashboard-tab" class="tab-content space-y-6">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div>
-                        <h2 class="text-2xl font-bold tracking-tight text-white">Executive Overview</h2>
-                        <p class="text-xs text-zinc-400">Real-time financial and operations metrics for VYRO WEAR</p>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <button class="bg-zinc-900 border border-zinc-700 text-zinc-300 text-xs px-3 py-2 rounded-lg hover:border-zinc-500 transition">
-                            <i class="fa-regular fa-calendar mr-1"></i> Today: Nov 6, 2026
-                        </button>
-                        <button class="bg-zinc-100 text-black font-semibold text-xs px-4 py-2 rounded-lg hover:bg-zinc-300 transition">
-                            <i class="fa-solid fa-download mr-1"></i> Export Report
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Metric Cards Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="p-5 rounded-xl bg-brand-darkCard border silver-border-glow transition">
-                        <div class="flex items-center justify-between text-zinc-400 text-xs mb-2">
-                            <span>TOTAL REVENUE (YTD)</span>
-                            <i class="fa-solid fa-bangladeshi-taka-sign text-zinc-400"></i>
-                        </div>
-                        <div class="text-2xl font-bold text-white mb-1">৳ 4,850,200</div>
-                        <div class="text-xs text-emerald-400 flex items-center">
-                            <i class="fa-solid fa-arrow-trend-up mr-1"></i> +14.2% from last month
-                        </div>
-                    </div>
-
-                    <div class="p-5 rounded-xl bg-brand-darkCard border silver-border-glow transition">
-                        <div class="flex items-center justify-between text-zinc-400 text-xs mb-2">
-                            <span>NET PROFIT MARGIN</span>
-                            <i class="fa-solid fa-percent text-zinc-400"></i>
-                        </div>
-                        <div class="text-2xl font-bold text-white mb-1">32.8%</div>
-                        <div class="text-xs text-emerald-400 flex items-center">
-                            <i class="fa-solid fa-arrow-trend-up mr-1"></i> ৳ 1,590,800 net gain
-                        </div>
-                    </div>
-
-                    <div class="p-5 rounded-xl bg-brand-darkCard border silver-border-glow transition">
-                        <div class="flex items-center justify-between text-zinc-400 text-xs mb-2">
-                            <span>TOTAL ORDERS</span>
-                            <i class="fa-solid fa-bag-shopping text-zinc-400"></i>
-                        </div>
-                        <div class="text-2xl font-bold text-white mb-1">1,420</div>
-                        <div class="text-xs text-amber-400 flex items-center">
-                            <i class="fa-solid fa-clock mr-1"></i> 38 Pending Dispatch
-                        </div>
-                    </div>
-
-                    <div class="p-5 rounded-xl bg-brand-darkCard border silver-border-glow transition">
-                        <div class="flex items-center justify-between text-zinc-400 text-xs mb-2">
-                            <span>INVENTORY VALUATION</span>
-                            <i class="fa-solid fa-warehouse text-zinc-400"></i>
-                        </div>
-                        <div class="text-2xl font-bold text-white mb-1">৳ 2,110,400</div>
-                        <div class="text-xs text-rose-400 flex items-center">
-                            <i class="fa-solid fa-triangle-exclamation mr-1"></i> 12 SKUs Low Stock
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Charts & Analytics Section -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <!-- Sales Trend Chart -->
-                    <div class="lg:col-span-2 p-5 rounded-xl bg-brand-darkCard border border-brand-border">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-sm font-semibold text-zinc-200">Sales & Cost Breakdown</h3>
-                            <span class="text-xs text-zinc-500">Monthly Performance</span>
-                        </div>
-                        <div class="h-64">
-                            <canvas id="salesChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Top Selling Categories / SKUs -->
-                    <div class="p-5 rounded-xl bg-brand-darkCard border border-brand-border flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-sm font-semibold text-zinc-200 mb-4">Best Performing Categories</h3>
-                            <div class="space-y-4">
-                                <div>
-                                    <div class="flex justify-between text-xs mb-1">
-                                        <span class="text-zinc-300">Oversized Hoodies & Sweatshirts</span>
-                                        <span class="text-zinc-400 font-semibold">৳ 1,820,000</span>
-                                    </div>
-                                    <div class="w-full bg-zinc-800 h-2 rounded-full overflow-hidden">
-                                        <div class="bg-zinc-200 h-full w-[65%]"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="flex justify-between text-xs mb-1">
-                                        <span class="text-zinc-300">Tailored Cargo Trousers</span>
-                                        <span class="text-zinc-400 font-semibold">৳ 1,240,000</span>
-                                    </div>
-                                    <div class="w-full bg-zinc-800 h-2 rounded-full overflow-hidden">
-                                        <div class="bg-zinc-400 h-full w-[45%]"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="flex justify-between text-xs mb-1">
-                                        <span class="text-zinc-300">Heavyweight Graphic Tees</span>
-                                        <span class="text-zinc-400 font-semibold">৳ 980,000</span>
-                                    </div>
-                                    <div class="w-full bg-zinc-800 h-2 rounded-full overflow-hidden">
-                                        <div class="bg-zinc-500 h-full w-[35%]"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-6 pt-4 border-t border-zinc-800 flex justify-between items-center text-xs text-zinc-400">
-                            <span>Top SKU: <strong class="text-white">VY-HD-BLK-L</strong></span>
-                            <span class="text-emerald-400 font-medium">410 Sold</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Recent Orders Table -->
-                <div class="p-5 rounded-xl bg-brand-darkCard border border-brand-border">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-sm font-semibold text-zinc-200">Recent Customer Orders</h3>
-                        <a href="#" onclick="switchTab('orders')" class="text-xs text-zinc-400 hover:text-white transition">View All Orders →</a>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs text-zinc-300">
-                            <thead class="bg-zinc-900/80 text-zinc-400 uppercase text-[10px] tracking-wider border-b border-zinc-800">
-                                <tr>
-                                    <th class="p-3">Order ID</th>
-                                    <th class="p-3">Customer</th>
-                                    <th class="p-3">SKUs / Items</th>
-                                    <th class="p-3">Amount</th>
-                                    <th class="p-3">Payment</th>
-                                    <th class="p-3">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-zinc-800/50">
-                                <tr class="hover:bg-zinc-900/40">
-                                    <td class="p-3 font-semibold text-zinc-200">#VY-9842</td>
-                                    <td class="p-3">Tanvir Ahmed</td>
-                                    <td class="p-3">Minimalist Silver Logo Hoodie (L)</td>
-                                    <td class="p-3 font-medium">৳ 3,450</td>
-                                    <td class="p-3"><span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">bKash</span></td>
-                                    <td class="p-3"><span class="px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800">Processing</span></td>
-                                </tr>
-                                <tr class="hover:bg-zinc-900/40">
-                                    <td class="p-3 font-semibold text-zinc-200">#VY-9841</td>
-                                    <td class="p-3">Nusrat Jahan</td>
-                                    <td class="p-3">Tactical Cargo Pants (M) x2</td>
-                                    <td class="p-3 font-medium">৳ 5,200</td>
-                                    <td class="p-3"><span class="px-2 py-0.5 rounded bg-blue-950 text-blue-400 border border-blue-800">COD</span></td>
-                                    <td class="p-3"><span class="px-2 py-0.5 rounded bg-blue-950 text-blue-400 border border-blue-800">Dispatched</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- MODULE 2: POS TERMINAL -->
-            <section id="pos-tab" class="tab-content hidden space-y-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h2 class="text-2xl font-bold tracking-tight text-white">POS Retail Checkout</h2>
-                        <p class="text-xs text-zinc-400">Fast counter sale & automatic inventory stock deduction</p>
-                    </div>
-                    <div class="text-xs bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-lg text-zinc-300">
-                        Counter #01 (Dhaka Flagship Store)
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <!-- Product Catalog Grid -->
-                    <div class="lg:col-span-2 space-y-4">
-                        <div class="flex gap-2">
-                            <input type="text" placeholder="Scan Barcode or type Product Name/SKU..." class="flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 text-xs text-zinc-200 focus:outline-none focus:border-zinc-500">
-                            <button class="bg-zinc-800 text-zinc-200 text-xs px-4 py-2 rounded-lg border border-zinc-700">Filter</button>
-                        </div>
-                        
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                            <!-- Product Item Card 1 -->
-                            <div onclick="addToCart('Minimalist Hoodie', 'L', 3450)" class="p-3 rounded-xl bg-brand-darkCard border border-zinc-800 hover:border-zinc-500 cursor-pointer transition">
-                                <div class="h-32 bg-zinc-900 rounded-lg mb-2 flex items-center justify-center text-zinc-700 font-bold">
-                                    [ HOODIE IMAGE ]
-                                </div>
-                                <h4 class="text-xs font-bold text-zinc-200 truncate">Minimalist Silver Logo Hoodie</h4>
-                                <p class="text-[10px] text-zinc-500">SKU: VY-HD-BLK-L</p>
-                                <div class="mt-2 flex justify-between items-center">
-                                    <span class="text-xs font-bold text-white">৳ 3,450</span>
-                                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400">Stock: 42</span>
-                                </div>
-                            </div>
-                            <!-- Product Item Card 2 -->
-                            <div onclick="addToCart('Tactical Cargo Pants', 'M', 2600)" class="p-3 rounded-xl bg-brand-darkCard border border-zinc-800 hover:border-zinc-500 cursor-pointer transition">
-                                <div class="h-32 bg-zinc-900 rounded-lg mb-2 flex items-center justify-center text-zinc-700 font-bold">
-                                    [ PANTS IMAGE ]
-                                </div>
-                                <h4 class="text-xs font-bold text-zinc-200 truncate">Tactical Cargo Pants</h4>
-                                <p class="text-[10px] text-zinc-500">SKU: VY-TR-SLV-M</p>
-                                <div class="mt-2 flex justify-between items-center">
-                                    <span class="text-xs font-bold text-white">৳ 2,600</span>
-                                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400">Stock: 18</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Cart & Payment Invoice Section -->
-                    <div class="p-5 rounded-xl bg-brand-darkCard border border-brand-border flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-sm font-semibold text-zinc-200 mb-4 border-b border-zinc-800 pb-2">Current Order Invoice</h3>
-                            <div id="cart-items" class="space-y-3 min-h-[180px]">
-                                <p class="text-xs text-zinc-500 text-center py-8">Click on a product to add to cart</p>
-                            </div>
-                        </div>
-
-                        <div class="space-y-3 border-t border-zinc-800 pt-4">
-                            <div class="flex justify-between text-xs text-zinc-400">
-                                <span>Subtotal</span>
-                                <span id="pos-subtotal" class="text-zinc-200">৳ 0</span>
-                            </div>
-                            <div class="flex justify-between text-xs text-zinc-400">
-                                <span>VAT (5% Configurable)</span>
-                                <span id="pos-vat" class="text-zinc-200">৳ 0</span>
-                            </div>
-                            <div class="flex justify-between text-sm font-bold text-white pt-2 border-t border-zinc-800">
-                                <span>Total Payable</span>
-                                <span id="pos-total" class="text-emerald-400">৳ 0</span>
-                            </div>
-
-                            <button onclick="completeSale()" class="w-full bg-zinc-100 hover:bg-zinc-300 text-black font-bold py-2.5 rounded-lg text-xs transition">
-                                <i class="fa-solid fa-print mr-1"></i> Checkout & Print Receipt
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- MODULE 3: AI BUSINESS ASSISTANT -->
-            <section id="ai-tab" class="tab-content hidden space-y-6">
-                <div>
-                    <h2 class="text-2xl font-bold tracking-tight text-white">VYRO AI Business Intelligence</h2>
-                    <p class="text-xs text-zinc-400">Algorithmic stock forecasting, sales velocity & profit analysis</p>
-                </div>
-
-                <div class="p-6 rounded-xl bg-brand-darkCard border silver-border-glow space-y-4">
-                    <div class="flex items-center space-x-3 text-zinc-300">
-                        <i class="fa-solid fa-robot text-lg text-zinc-100"></i>
-                        <span class="font-semibold text-sm">Automated ERP Intelligence Insights</span>
-                    </div>
-
-                    <div class="space-y-3 text-xs text-zinc-400">
-                        <div class="p-3 bg-zinc-900/60 rounded-lg border border-zinc-800">
-                            <strong class="text-white block mb-1">📦 Reorder Suggestion:</strong>
-                            <p>Based on current 14-day velocity, SKU <span class="text-zinc-200 font-mono">VY-HD-BLK-L</span> will be completely out of stock in 4 days. Suggesting production order of 150 units.</p>
-                        </div>
-                        <div class="p-3 bg-zinc-900/60 rounded-lg border border-zinc-800">
-                            <strong class="text-white block mb-1">💡 Pricing Optimization:</strong>
-                            <p>Heavyweight Graphic Tees profit margin is currently 42%. Demand spike detected in Chattogram branch; potential to increase price by 5% without impacting volume.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
+    <!-- Mobile Header -->
+    <header class="md:hidden flex items-center justify-between p-4 bg-zinc-950 border-b border-zinc-800 sticky top-0 z-50">
+        <div>
+            <h1 class="text-xl font-bold tracking-wider silver-gradient-text">VYRO WEAR</h1>
+            <p class="text-[8px] tracking-widest text-zinc-400 uppercase">ELEVATE YOUR EVERYDAY</p>
         </div>
+        <button class="text-zinc-300 p-2"><i class="fa-solid fa-bars text-lg"></i></button>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="p-4 md:p-8 space-y-6">
+
+        <!-- Top Header & Filter -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <h2 class="text-2xl font-bold text-white tracking-wide">Executive Dashboard</h2>
+                <p class="text-xs text-zinc-400">ব্যবসার লাইভ পারফরম্যান্স ও হিসাব ওভারভিউ</p>
+            </div>
+            <div class="flex gap-2 bg-zinc-900 p-1 rounded-lg border border-zinc-800 text-xs">
+                <button class="px-3 py-1.5 rounded bg-zinc-800 text-white font-medium">আজ</button>
+                <button class="px-3 py-1.5 rounded text-zinc-400 hover:text-white">গত ৭ দিন</button>
+                <button class="px-3 py-1.5 rounded text-zinc-400 hover:text-white">এই মাস</button>
+            </div>
+        </div>
+
+        <!-- Metric Cards Grid -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="silver-card p-4 rounded-xl space-y-2">
+                <span class="text-xs text-zinc-400">মোট বিক্রয় (Total Sales)</span>
+                <p class="text-xl md:text-2xl font-bold text-white">৳ ১২,৫০,০০০</p>
+                <span class="text-[11px] text-emerald-400 flex items-center gap-1"><i class="fa-solid fa-arrow-up"></i> +১২.৫% গত মাস থেকে</span>
+            </div>
+
+            <div class="silver-card p-4 rounded-xl space-y-2">
+                <span class="text-xs text-zinc-400">মোট অর্ডার (Orders)</span>
+                <p class="text-xl md:text-2xl font-bold text-white">৮৫০ টি</p>
+                <span class="text-[11px] text-zinc-400">ডিলেভার্ড: ৭২০ | পেন্ডিং: ৫০</span>
+            </div>
+
+            <div class="silver-card p-4 rounded-xl space-y-2">
+                <span class="text-xs text-zinc-400">মোট খরচ (Expenses)</span>
+                <p class="text-xl md:text-2xl font-bold text-white">৳ ৪,২০,০০০</p>
+                <span class="text-[11px] text-zinc-400">COGS + মেটেরিয়াল + অপারেশন</span>
+            </div>
+
+            <div class="silver-card p-4 rounded-xl space-y-2">
+                <span class="text-xs text-zinc-400">খাঁটি লাভ (Net Profit)</span>
+                <p class="text-xl md:text-2xl font-bold text-emerald-400">৳ ৩,৮০,০০০</p>
+                <span class="text-[11px] text-emerald-400">মার্জিন: ৩০.৪%</span>
+            </div>
+        </div>
+
+        <!-- Size & Color Variant Matrix Preview -->
+        <div class="silver-card p-5 rounded-xl space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="font-semibold text-white">Size & Color Variant Stock (Oversized T-Shirt)</h3>
+                <span class="text-xs bg-zinc-800 text-zinc-300 px-2.5 py-1 rounded border border-zinc-700">SKU Matrix</span>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-xs text-left text-zinc-300">
+                    <thead class="bg-zinc-900 text-zinc-400 uppercase text-[10px]">
+                        <tr>
+                            <th class="p-3">Size / Color</th>
+                            <th class="p-3">Black</th>
+                            <th class="p-3">White</th>
+                            <th class="p-3">Navy</th>
+                            <th class="p-3">Total Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-zinc-800">
+                        <tr>
+                            <td class="p-3 font-semibold text-white">S</td>
+                            <td class="p-3"><span class="bg-zinc-800 px-2 py-1 rounded text-white">10</span></td>
+                            <td class="p-3"><span class="bg-zinc-800 px-2 py-1 rounded text-white">8</span></td>
+                            <td class="p-3"><span class="bg-zinc-800 px-2 py-1 rounded text-amber-400">5 (Low)</span></td>
+                            <td class="p-3 font-semibold">23 pcs</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-semibold text-white">M</td>
+                            <td class="p-3"><span class="bg-zinc-800 px-2 py-1 rounded text-white">15</span></td>
+                            <td class="p-3"><span class="bg-zinc-800 px-2 py-1 rounded text-white">12</span></td>
+                            <td class="p-3"><span class="bg-zinc-800 px-2 py-1 rounded text-white">9</span></td>
+                            <td class="p-3 font-semibold">36 pcs</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-semibold text-white">L</td>
+                            <td class="p-3"><span class="bg-zinc-800 px-2 py-1 rounded text-white">12</span></td>
+                            <td class="p-3"><span class="bg-zinc-800 px-2 py-1 rounded text-white">10</span></td>
+                            <td class="p-3"><span class="bg-zinc-800 px-2 py-1 rounded text-white">7</span></td>
+                            <td class="p-3 font-semibold">29 pcs</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Recent Orders Table -->
+        <div class="silver-card p-5 rounded-xl space-y-4">
+            <h3 class="font-semibold text-white">সাম্প্রতিক অর্ডারসমূহ (Recent Orders)</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-xs text-left text-zinc-300">
+                    <thead class="bg-zinc-900 text-zinc-400 uppercase text-[10px]">
+                        <tr>
+                            <th class="p-3">অর্ডার ID</th>
+                            <th class="p-3">গ্রাহক</th>
+                            <th class="p-3">পেমেন্ট মেথড</th>
+                            <th class="p-3">কুরিয়ার স্ট্যাটাস</th>
+                            <th class="p-3">মোট টাকা</th>
+                            <th class="p-3">স্ট্যাটাস</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-zinc-800">
+                        <tr>
+                            <td class="p-3 font-mono text-zinc-400">#VW-1085</td>
+                            <td class="p-3 text-white">Tanvir Ahmed</td>
+                            <td class="p-3">bKash (Advance)</td>
+                            <td class="p-3 text-zinc-400">Steadfast (ID: 98412)</td>
+                            <td class="p-3 font-semibold text-white">৳ ২,৪৫০</td>
+                            <td class="p-3"><span class="bg-amber-950 text-amber-400 border border-amber-800 px-2 py-0.5 rounded text-[10px]">Processing</span></td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-mono text-zinc-400">#VW-1084</td>
+                            <td class="p-3 text-white">Rahim Chowdhury</td>
+                            <td class="p-3">Cash on Delivery</td>
+                            <td class="p-3 text-zinc-400">Pathao (ID: 55419)</td>
+                            <td class="p-3 font-semibold text-white">৳ ১,৮৫০</td>
+                            <td class="p-3"><span class="bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded text-[10px]">Delivered</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </main>
 
-    <!-- JS LOGIC -->
-    <script>
-        // Tab Switching Logic
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.nav-item').forEach(el => {
-                el.classList.remove('active', 'bg-zinc-900', 'text-zinc-200', 'border');
-                el.classList.add('text-zinc-400');
-            });
+    <!-- Mobile Bottom Navigation Bar -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-zinc-950 border-t border-zinc-800 flex justify-around py-2 text-zinc-400 z-50">
+        <a href="#" class="flex flex-col items-center gap-1 text-white text-[10px]">
+            <i class="fa-solid fa-chart-line text-sm"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="#" class="flex flex-col items-center gap-1 hover:text-white text-[10px]">
+            <i class="fa-solid fa-shirt text-sm"></i>
+            <span>Products</span>
+        </a>
+        <a href="#" class="flex flex-col items-center gap-1 hover:text-white text-[10px]">
+            <i class="fa-solid fa-cart-shopping text-sm"></i>
+            <span>Orders</span>
+        </a>
+        <a href="#" class="flex flex-col items-center gap-1 hover:text-white text-[10px]">
+            <i class="fa-solid fa-cash-register text-sm"></i>
+            <span>POS</span>
+        </a>
+        <a href="#" class="flex flex-col items-center gap-1 hover:text-white text-[10px]">
+            <i class="fa-solid fa-robot text-sm"></i>
+            <span>AI Bot</span>
+        </a>
+    </nav>
 
-            document.getElementById(tabId + '-tab').classList.remove('hidden');
-            event.currentTarget.classList.add('active', 'bg-zinc-900', 'text-zinc-200', 'border', 'border-zinc-800');
-        }
-
-        // Cart State for POS
-        let cart = [];
-        function addToCart(name, size, price) {
-            cart.push({ name, size, price });
-            renderCart();
-        }
-
-        function renderCart() {
-            const container = document.getElementById('cart-items');
-            if(cart.length === 0) {
-                container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-8">Click on a product to add to cart</p>`;
-                document.getElementById('pos-subtotal').innerText = '৳ 0';
-                document.getElementById('pos-vat').innerText = '৳ 0';
-                document.getElementById('pos-total').innerText = '৳ 0';
-                return;
-            }
-
-            let html = '';
-            let subtotal = 0;
-            cart.forEach((item, index) => {
-                subtotal += item.price;
-                html += `
-                <div class="flex justify-between items-center text-xs p-2 bg-zinc-900 rounded border border-zinc-800">
-                    <div>
-                        <p class="text-zinc-200 font-semibold">${item.name}</p>
-                        <span class="text-[10px] text-zinc-500">Size: ${item.size}</span>
-                    </div>
-                    <span class="text-white font-medium">৳ ${item.price}</span>
-                </div>`;
-            });
-
-            const vat = subtotal * 0.05;
-            const total = subtotal + vat;
-
-            container.innerHTML = html;
-            document.getElementById('pos-subtotal').innerText = `৳ ${subtotal.toLocaleString()}`;
-            document.getElementById('pos-vat').innerText = `৳ ${vat.toLocaleString()}`;
-            document.getElementById('pos-total').innerText = `৳ ${total.toLocaleString()}`;
-        }
-
-        function completeSale() {
-            if(cart.length === 0) return alert('Cart is empty!');
-            alert('Sale Completed Successfully! Stock deducted & invoice generated.');
-            cart = [];
-            renderCart();
-        }
-
-        // Initialize Chart.js
-        window.onload = function() {
-            const ctx = document.getElementById('salesChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'],
-                    datasets: [
-                        {
-                            label: 'Revenue (BDT)',
-                            data: [520000, 680000, 890000, 750000, 1100000, 1420000],
-                            borderColor: '#E5E7EB',
-                            borderWidth: 2,
-                            tension: 0.3
-                        },
-                        {
-                            label: 'COGS & Ops Expense',
-                            data: [350000, 410000, 520000, 480000, 690000, 820000],
-                            borderColor: '#52525B',
-                            borderWidth: 2,
-                            tension: 0.3
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { labels: { color: '#9CA3AF', font: { size: 10 } } }
-                    },
-                    scales: {
-                        x: { ticks: { color: '#6B7280' }, grid: { color: '#18181B' } },
-                        y: { ticks: { color: '#6B7280' }, grid: { color: '#18181B' } }
-                    }
-                }
-            });
-        };
-    </script>
 </body>
 </html>
