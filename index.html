@@ -1,395 +1,294 @@
 <!DOCTYPE html>
-<html lang="bn" class="dark">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VYRO WEAR | Premium Fashion ERP</title>
+    <title>VYRO WEAR PRO — Enterprise Fashion ERP</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        darkbg: '#09090b',
-                        cardbg: '#121215',
-                        silverborder: '#27272a'
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- React & ReactDOM CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel for JSX Execution -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        .silver-gradient-text {
-            background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 50%, #71717a 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .silver-card {
-            background: #121215;
-            border: 1px solid #27272a;
-            transition: all 0.2s ease;
-        }
-        .silver-card:hover {
-            border-color: #52525b;
-        }
+        body { background-color: #090d16; color: #f3f4f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #090d16; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 4px; }
     </style>
 </head>
-<body class="bg-darkbg text-zinc-100 min-h-screen pb-24 md:pb-0 md:pl-64 font-sans">
+<body>
+    <div id="root"></div>
 
-    <!-- Desktop Sidebar -->
-    <aside class="hidden md:flex flex-col w-64 h-screen fixed left-0 top-0 bg-zinc-950 border-r border-zinc-800 p-4 space-y-6 z-40">
-        <div class="px-2 pt-2">
-            <h1 class="text-xl font-bold tracking-wider silver-gradient-text">VYRO WEAR</h1>
-            <p class="text-[9px] tracking-widest text-zinc-400 mt-0.5 uppercase">ELEVATE YOUR EVERYDAY</p>
-        </div>
+    <script type="text/babel">
+        function VyroWearApp() {
+            const [activeTab, setActiveTab] = React.useState('dashboard');
+            const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
-        <nav class="flex-1 space-y-1.5 text-xs font-medium overflow-y-auto pr-1">
-            <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg bg-zinc-800 text-white border border-zinc-700 transition">
-                <i class="fa-solid fa-chart-line w-4 text-zinc-300"></i>
-                <span>Executive Dashboard</span>
-            </button>
-            <button onclick="switchTab('products')" id="nav-products" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
-                <i class="fa-solid fa-shirt w-4"></i>
-                <span>পণ্যের ক্যাটালগ ও ম্যাট্রিক্স</span>
-            </button>
-            <button onclick="switchTab('inventory')" id="nav-inventory" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
-                <i class="fa-solid fa-boxes-stacked w-4"></i>
-                <span>ইনভেন্টরি ও স্টক</span>
-            </button>
-            <button onclick="switchTab('production')" id="nav-production" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
-                <i class="fa-solid fa-industry w-4"></i>
-                <span>প্রোডাকশন ও BOM</span>
-            </button>
-            <button onclick="switchTab('orders')" id="nav-orders" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
-                <i class="fa-solid fa-cart-shopping w-4"></i>
-                <span>অর্ডার ম্যানেজমেন্ট</span>
-            </button>
-            <button onclick="switchTab('pos')" id="nav-pos" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
-                <i class="fa-solid fa-cash-register w-4"></i>
-                <span>POS & কুইক সেলস</span>
-            </button>
-            <button onclick="switchTab('finance')" id="nav-finance" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
-                <i class="fa-solid fa-wallet w-4"></i>
-                <span>ফাইন্যান্স ও P&L</span>
-            </button>
-            <button onclick="switchTab('ai')" id="nav-ai" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition">
-                <i class="fa-solid fa-robot w-4 text-emerald-400"></i>
-                <span>AI Business Assistant</span>
-            </button>
-        </nav>
+            // Mock State for Modules
+            const [products, setProducts] = React.useState([
+                { id: 1, name: 'Premium Oversized Hoodie', sku: 'VW-HD-BLK-M', category: 'Hoodie', price: 1850, stock: 24, size: 'M', color: 'Black' },
+                { id: 2, name: 'Couple Hoodie Set', sku: 'VW-CHD-RED-L', category: 'Couple Hoodie', price: 3400, stock: 10, size: 'L', color: 'Red' }
+            ]);
 
-        <div class="border-t border-zinc-800 pt-4">
-            <div class="flex items-center gap-3 px-2">
-                <div class="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center font-bold text-xs text-white">VW</div>
-                <div>
-                    <p class="text-xs font-semibold text-white">Owner Admin</p>
-                    <p class="text-[10px] text-zinc-400">owner@vyrowear.com</p>
-                </div>
-            </div>
-        </div>
-    </aside>
+            const [orders, setOrders] = React.useState([
+                { id: 'VW-1001', customer: 'রাহিম আহমেদ', phone: '01700000000', address: 'ঢাকা, বাংলাদেশ', total: 1850, status: 'পেন্ডিং', channel: 'Facebook' },
+                { id: 'VW-1002', customer: 'তানভির হোসেন', phone: '01800000000', address: 'চট্টগ্রাম', total: 3400, status: 'কনফার্মড', channel: 'Offline Shop' }
+            ]);
 
-    <!-- Mobile Header -->
-    <header class="md:hidden flex items-center justify-between p-4 bg-zinc-950 border-b border-zinc-800 sticky top-0 z-40">
-        <div>
-            <h1 class="text-lg font-bold tracking-wider silver-gradient-text">VYRO WEAR</h1>
-            <p class="text-[7px] tracking-widest text-zinc-400 uppercase">ELEVATE YOUR EVERYDAY</p>
-        </div>
-        <div class="flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span class="text-xs text-zinc-300 font-mono">Live ERP</span>
-        </div>
-    </header>
+            const [expenses, setExpenses] = React.useState([
+                { id: 1, title: 'ফেসবুক এড কস্ট', category: 'Marketing', amount: 2500, date: '2026-11-08' },
+                { id: 2, title: 'প্যাকেজিং ব্যাগ ক্রয়', category: 'Packaging', amount: 1200, date: '2026-11-07' }
+            ]);
 
-    <!-- Main Content Area Container -->
-    <main class="p-4 md:p-8 max-w-7xl mx-auto space-y-6">
+            return (
+                <div className="flex h-screen overflow-hidden">
+                    {/* Sidebar Navigation */}
+                    <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 border-r border-slate-800 transform ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-200 ease-in-out flex flex-col justify-between`}>
+                        <div className="p-5 overflow-y-auto">
+                            <div className="flex items-center justify-between">
+                                <h1 className="text-xl font-black text-white tracking-wider">VYRO WEAR <span className="text-xs bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">PRO</span></h1>
+                                <button onClick={() => setMobileMenuOpen(false)} className="md:hidden text-slate-400">✕</button>
+                            </div>
+                            <p className="text-xs text-slate-500 mt-1">ফ্যাশন ইআরপি ও বিজনেস সিস্টেম</p>
 
-        <!-- TAB 1: EXECUTIVE DASHBOARD -->
-        <section id="tab-dashboard" class="space-y-6">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <h2 class="text-xl md:text-2xl font-bold text-white tracking-wide">Executive Dashboard</h2>
-                    <p class="text-xs text-zinc-400">ব্যবসার লাইভ পারফরম্যান্স ও ফাইন্যান্সিয়াল কমান্ড সেন্টার</p>
-                </div>
-                <div class="flex gap-1.5 bg-zinc-900 p-1 rounded-lg border border-zinc-800 text-xs">
-                    <button class="px-3 py-1.5 rounded bg-zinc-800 text-white font-medium">আজ</button>
-                    <button class="px-3 py-1.5 rounded text-zinc-400 hover:text-white">গত ৭ দিন</button>
-                    <button class="px-3 py-1.5 rounded text-zinc-400 hover:text-white">এই মাস</button>
-                </div>
-            </div>
+                            <nav className="mt-6 space-y-1">
+                                <NavItem id="dashboard" icon="📊" label="ড্যাশবোর্ড (Dashboard)" activeTab={activeTab} setActiveTab={setActiveTab} />
+                                <NavItem id="products" icon="👕" label="পণ্য ও ভ্যারিয়েন্ট (Products)" activeTab={activeTab} setActiveTab={setActiveTab} />
+                                <NavItem id="inventory" icon="🏭" label="স্টক ও ইনভেন্টরি (Inventory)" activeTab={activeTab} setActiveTab={setActiveTab} />
+                                <NavItem id="orders" icon="📦" label="অর্ডার ম্যানেজমেন্ট (Orders)" activeTab={activeTab} setActiveTab={setActiveTab} />
+                                <NavItem id="pos" icon="💻" label="পিওএস বিক্রয় (POS Sales)" activeTab={activeTab} setActiveTab={setActiveTab} />
+                                <NavItem id="expenses" icon="💸" label="ব্যবসার খরচ (Expenses)" activeTab={activeTab} setActiveTab={setActiveTab} />
+                                <NavItem id="customers" icon="👥" label="গ্রাহক তালিকা (Customers)" activeTab={activeTab} setActiveTab={setActiveTab} />
+                                <NavItem id="suppliers" icon="🚚" label="সাপ্লায়ার ম্যানেজমেন্ট" activeTab={activeTab} setActiveTab={setActiveTab} />
+                                <NavItem id="finance" icon="💰" label="আর্থিক হিসাব (Finance)" activeTab={activeTab} setActiveTab={setActiveTab} />
+                                <NavItem id="profit" icon="📈" label="প্রফিট অ্যানালিটিক্স (Profit)" activeTab={activeTab} setActiveTab={setActiveTab} />
+                                <NavItem id="reports" icon="📋" label="রিপোর্ট ও এক্সপোর্ট (Reports)" activeTab={activeTab} setActiveTab={setActiveTab} />
+                                <NavItem id="employees" icon="👔" label="কর্মচারী পারমিশন (Staff)" activeTab={activeTab} setActiveTab={setActiveTab} />
+                                <NavItem id="backup" icon="💾" label="ব্যাকআপ ও রিসেট (Backup)" activeTab={activeTab} setActiveTab={setActiveTab} />
+                                <NavItem id="settings" icon="⚙️" label="বিজনেস সেটিং (Settings)" activeTab={activeTab} setActiveTab={setActiveTab} />
+                            </nav>
+                        </div>
 
-            <!-- Metrics Grid -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="silver-card p-4 rounded-xl space-y-2">
-                    <span class="text-xs text-zinc-400">মোট বিক্রয় (Revenue)</span>
-                    <p class="text-xl md:text-2xl font-bold text-white">৳ ১২,৫০,০০০</p>
-                    <span class="text-[10px] text-emerald-400 flex items-center gap-1"><i class="fa-solid fa-arrow-up"></i> +১২.৫% গত মাস থেকে</span>
-                </div>
-                <div class="silver-card p-4 rounded-xl space-y-2">
-                    <span class="text-xs text-zinc-400">মোট অর্ডার (Orders)</span>
-                    <p class="text-xl md:text-2xl font-bold text-white">৮৫০ টি</p>
-                    <span class="text-[10px] text-zinc-400">ডেলিভার্ড: ৭২০ | পেন্ডিং: ৫০</span>
-                </div>
-                <div class="silver-card p-4 rounded-xl space-y-2">
-                    <span class="text-xs text-zinc-400">মোট খরচ (Expenses)</span>
-                    <p class="text-xl md:text-2xl font-bold text-white">৳ ৪,২০,০০০</p>
-                    <span class="text-[10px] text-zinc-400">COGS + র ম্যাটেরিয়াল + অপস্</span>
-                </div>
-                <div class="silver-card p-4 rounded-xl space-y-2">
-                    <span class="text-xs text-zinc-400">নিট প্রফিট (Net Profit)</span>
-                    <p class="text-xl md:text-2xl font-bold text-emerald-400">৳ ৩,৮০,০০০</p>
-                    <span class="text-[10px] text-emerald-400">প্রফিট মার্জিন: ৩০.৪%</span>
-                </div>
-            </div>
+                        <div className="p-4 border-t border-slate-800 text-xs text-slate-400 bg-slate-950 flex justify-between items-center">
+                            <span>মুদ্রা: BDT (৳)</span>
+                            <span className="text-emerald-400 font-semibold">● অনলাইন</span>
+                        </div>
+                    </aside>
 
-            <!-- Variant Stock Matrix Preview -->
-            <div class="silver-card p-5 rounded-xl space-y-4">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <h3 class="font-semibold text-white text-sm md:text-base">Size & Color Variant Stock (Oversized T-Shirt)</h3>
-                        <p class="text-[11px] text-zinc-400">প্রতিটি ভ্যারিয়েন্টের আলাদা ইনভেন্টরি ট্র্যাকিং</p>
+                    {/* Main Content Area */}
+                    <div className="flex-1 flex flex-col md:pl-64 overflow-y-auto">
+                        {/* Header */}
+                        <header className="h-16 bg-slate-900/60 backdrop-blur border-b border-slate-800 sticky top-0 z-40 flex items-center justify-between px-6">
+                            <div className="flex items-center gap-3">
+                                <button onClick={() => setMobileMenuOpen(true)} className="md:hidden text-slate-300 text-xl">☰</button>
+                                <h2 className="text-lg font-bold text-white capitalize">{activeTab} মডিউল</h2>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <input type="text" placeholder="গ্লোবাল সার্চ (SKU, অর্ডার, নাম)..." className="bg-slate-950 border border-slate-800 text-xs px-3 py-1.5 rounded-lg w-48 md:w-64 focus:outline-none focus:border-blue-500" />
+                                <span className="text-xs bg-amber-950 text-amber-400 border border-amber-800 px-2.5 py-1 rounded-md font-medium">Owner (অনার মোড)</span>
+                            </div>
+                        </header>
+
+                        {/* Module Content Switcher */}
+                        <main className="p-6">
+                            {activeTab === 'dashboard' && <DashboardView orders={orders} products={products} expenses={expenses} />}
+                            {activeTab === 'products' && <ProductsView products={products} setProducts={setProducts} />}
+                            {activeTab === 'inventory' && <InventoryView products={products} />}
+                            {activeTab === 'orders' && <OrdersView orders={orders} setOrders={setOrders} />}
+                            {activeTab === 'pos' && <PosView products={products} />}
+                            {activeTab === 'expenses' && <ExpensesView expenses={expenses} setExpenses={setExpenses} />}
+                            {activeTab === 'customers' && <CustomersView orders={orders} />}
+                            {activeTab === 'suppliers' && <SuppliersView />}
+                            {activeTab === 'finance' && <FinanceView orders={orders} expenses={expenses} />}
+                            {activeTab === 'profit' && <ProfitView orders={orders} expenses={expenses} />}
+                            {activeTab === 'reports' && <ReportsView />}
+                            {activeTab === 'employees' && <EmployeesView />}
+                            {activeTab === 'backup' && <BackupView />}
+                            {activeTab === 'settings' && <SettingsView />}
+                        </main>
                     </div>
-                    <span class="text-[10px] bg-zinc-800 text-zinc-300 px-2.5 py-1 rounded border border-zinc-700">SKU Matrix Active</span>
                 </div>
-                
-                <div class="overflow-x-auto">
-                    <table class="w-full text-xs text-left text-zinc-300">
-                        <thead class="bg-zinc-900 text-zinc-400 uppercase text-[10px]">
-                            <tr>
-                                <th class="p-3">Size / Color</th>
-                                <th class="p-3">Black</th>
-                                <th class="p-3">White</th>
-                                <th class="p-3">Navy</th>
-                                <th class="p-3">Total Stock</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-zinc-800">
-                            <tr>
-                                <td class="p-3 font-semibold text-white">S</td>
-                                <td class="p-3"><span class="bg-zinc-900 px-2 py-1 rounded border border-zinc-800 text-white">10 pcs</span></td>
-                                <td class="p-3"><span class="bg-zinc-900 px-2 py-1 rounded border border-zinc-800 text-white">8 pcs</span></td>
-                                <td class="p-3"><span class="bg-amber-950/50 text-amber-400 border border-amber-800/50 px-2 py-1 rounded">5 pcs (Low)</span></td>
-                                <td class="p-3 font-semibold text-white">23 pcs</td>
-                            </tr>
-                            <tr>
-                                <td class="p-3 font-semibold text-white">M</td>
-                                <td class="p-3"><span class="bg-zinc-900 px-2 py-1 rounded border border-zinc-800 text-white">15 pcs</span></td>
-                                <td class="p-3"><span class="bg-zinc-900 px-2 py-1 rounded border border-zinc-800 text-white">12 pcs</span></td>
-                                <td class="p-3"><span class="bg-zinc-900 px-2 py-1 rounded border border-zinc-800 text-white">9 pcs</span></td>
-                                <td class="p-3 font-semibold text-white">36 pcs</td>
-                            </tr>
-                            <tr>
-                                <td class="p-3 font-semibold text-white">L</td>
-                                <td class="p-3"><span class="bg-zinc-900 px-2 py-1 rounded border border-zinc-800 text-white">12 pcs</span></td>
-                                <td class="p-3"><span class="bg-zinc-900 px-2 py-1 rounded border border-zinc-800 text-white">10 pcs</span></td>
-                                <td class="p-3"><span class="bg-zinc-900 px-2 py-1 rounded border border-zinc-800 text-white">7 pcs</span></td>
-                                <td class="p-3 font-semibold text-white">29 pcs</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Recent Orders Table -->
-            <div class="silver-card p-5 rounded-xl space-y-4">
-                <div class="flex justify-between items-center">
-                    <h3 class="font-semibold text-white text-sm md:text-base">সাম্প্রতিক অর্ডারসমূহ (Recent Orders)</h3>
-                    <button onclick="switchTab('orders')" class="text-xs text-zinc-400 hover:text-white underline">সব দেখুন</button>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-xs text-left text-zinc-300">
-                        <thead class="bg-zinc-900 text-zinc-400 uppercase text-[10px]">
-                            <tr>
-                                <th class="p-3">অর্ডার ID</th>
-                                <th class="p-3">গ্রাহক</th>
-                                <th class="p-3">পেমেন্ট মেথড</th>
-                                <th class="p-3">কুরিয়ার ট্র্যাকিং</th>
-                                <th class="p-3">টাকা</th>
-                                <th class="p-3">স্ট্যাটাস</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-zinc-800">
-                            <tr>
-                                <td class="p-3 font-mono text-zinc-400">#VW-1085</td>
-                                <td class="p-3 text-white font-medium">Tanvir Ahmed</td>
-                                <td class="p-3">bKash (Advance)</td>
-                                <td class="p-3 text-zinc-400">Steadfast (ID: 98412)</td>
-                                <td class="p-3 font-semibold text-white">৳ ২,৪৫০</td>
-                                <td class="p-3"><span class="bg-amber-950/60 text-amber-400 border border-amber-800/50 px-2 py-0.5 rounded text-[10px]">Processing</span></td>
-                            </tr>
-                            <tr>
-                                <td class="p-3 font-mono text-zinc-400">#VW-1084</td>
-                                <td class="p-3 text-white font-medium">Rahim Chowdhury</td>
-                                <td class="p-3">Cash on Delivery</td>
-                                <td class="p-3 text-zinc-400">Pathao (ID: 55419)</td>
-                                <td class="p-3 font-semibold text-white">৳ ১,৮৫০</td>
-                                <td class="p-3"><span class="bg-emerald-950/60 text-emerald-400 border border-emerald-800/50 px-2 py-0.5 rounded text-[10px]">Delivered</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 2: PRODUCTS -->
-        <section id="tab-products" class="space-y-6 hidden">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h2 class="text-xl font-bold text-white">Product & Variant Management</h2>
-                    <p class="text-xs text-zinc-400">নতুন পণ্য যোগ করুন ও ভ্যারিয়েন্ট ম্যাট্রিক্স কনফিগার করুন</p>
-                </div>
-                <button onclick="alert('পণ্য যোগ করার ফর্ম ওপেন হয়েছে!')" class="bg-white text-zinc-950 hover:bg-zinc-200 px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-2">
-                    <i class="fa-solid fa-plus"></i> নতুন পণ্য যোগ করুন
-                </button>
-            </div>
-            <div class="silver-card p-6 rounded-xl text-center space-y-3">
-                <i class="fa-solid fa-shirt text-3xl text-zinc-500"></i>
-                <h3 class="font-semibold text-white">VYRO WEAR Premium Catalog</h3>
-                <p class="text-xs text-zinc-400 max-w-md mx-auto">এখানে প্রতিটি প্রোডাক্টের SKU, Barcode, Selling Price এবং Purchase Cost সুনির্দিষ্টভাবে সংরক্ষিত আছে।</p>
-            </div>
-        </section>
-
-        <!-- TAB 3: INVENTORY -->
-        <section id="tab-inventory" class="space-y-6 hidden">
-            <h2 class="text-xl font-bold text-white">Inventory & Stock Control</h2>
-            <div class="silver-card p-6 rounded-xl text-center space-y-3">
-                <i class="fa-solid fa-boxes-stacked text-3xl text-zinc-500"></i>
-                <h3 class="font-semibold text-white">রিয়েল-টাইম স্টক ট্র্যাকিং</h3>
-                <p class="text-xs text-zinc-400">অর্ডার কনফার্ম বা ডেলিভারি হলে স্বয়ংক্রিয়ভাবে স্টক আপডেট হয়। নেগেটিভ স্টক প্রতিরোধ ব্যবস্থা সক্রিয় রয়েছে।</p>
-            </div>
-        </section>
-
-        <!-- TAB 4: PRODUCTION -->
-        <section id="tab-production" class="space-y-6 hidden">
-            <h2 class="text-xl font-bold text-white">Production & Bill of Materials (BOM)</h2>
-            <div class="silver-card p-6 rounded-xl text-center space-y-3">
-                <i class="fa-solid fa-industry text-3xl text-zinc-500"></i>
-                <h3 class="font-semibold text-white">ফ্যাশন প্রোডাকশন ব্যাচ ম্যানেজমেন্ট</h3>
-                <p class="text-xs text-zinc-400">প্রোডাকশন সম্পন্ন হলে কাঁচামাল (Fabric, Buttons) কেটে ফিনিশড পণ্য স্টকে যুক্ত হয়।</p>
-            </div>
-        </section>
-
-        <!-- TAB 5: ORDERS -->
-        <section id="tab-orders" class="space-y-6 hidden">
-            <h2 class="text-xl font-bold text-white">Order Management System</h2>
-            <div class="silver-card p-6 rounded-xl text-center space-y-3">
-                <i class="fa-solid fa-cart-shopping text-3xl text-zinc-500"></i>
-                <h3 class="font-semibold text-white">সকল অর্ডার লিস্ট ও কুরিয়ার স্ট্যাটাস</h3>
-                <p class="text-xs text-zinc-400">Steadfast, Pathao ও RedX ইন্টিগ্রেশনের মাধ্যমে কুরিয়ার কনসাইনমেন্ট তৈরি করুন।</p>
-            </div>
-        </section>
-
-        <!-- TAB 6: POS -->
-        <section id="tab-pos" class="space-y-6 hidden">
-            <h2 class="text-xl font-bold text-white">POS & Quick Sales Interface</h2>
-            <div class="silver-card p-6 rounded-xl text-center space-y-3">
-                <i class="fa-solid fa-cash-register text-3xl text-zinc-500"></i>
-                <h3 class="font-semibold text-white">ফাস্ট পয়েন্ট অব সেলস (POS)</h3>
-                <p class="text-xs text-zinc-400">বারকোড স্ক্যান করে তাৎক্ষণিকভাবে ইনভয়েস তৈরি ও পেমেন্ট রিসিভ করুন।</p>
-            </div>
-        </section>
-
-        <!-- TAB 7: FINANCE -->
-        <section id="tab-finance" class="space-y-6 hidden">
-            <h2 class="text-xl font-bold text-white">Finance, Expenses & P&L</h2>
-            <div class="silver-card p-6 rounded-xl text-center space-y-3">
-                <i class="fa-solid fa-wallet text-3xl text-zinc-500"></i>
-                <h3 class="font-semibold text-white">লাভ-ক্ষতি ও খরচ লেজার</h3>
-                <p class="text-xs text-zinc-400">দোকান ভাড়া, মার্কেটিং খরচ এবং COGS বাদ দিয়ে রিয়েল-টাইম নিট প্রফিট হিসাব করুন।</p>
-            </div>
-        </section>
-
-        <!-- TAB 8: AI ASSISTANT -->
-        <section id="tab-ai" class="space-y-6 hidden">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h2 class="text-xl font-bold text-white">AI Business Assistant</h2>
-                    <p class="text-xs text-zinc-400">আপনার ব্র্যান্ডের ডাটা অ্যানালাইসিস করতে এআই-কে যেকোনো প্রশ্ন করুন</p>
-                </div>
-                <span class="bg-emerald-950/60 text-emerald-400 border border-emerald-800 px-3 py-1 rounded-full text-xs font-medium">Online</span>
-            </div>
-
-            <div class="silver-card p-4 rounded-xl space-y-4">
-                <div class="bg-zinc-900 p-3 rounded-lg text-xs space-y-2 border border-zinc-800">
-                    <p class="text-zinc-400">🤖 **AI Assistant:** হ্যালো ওনার! আজ আপনার মোট সেলস ১২,৫০,০০০ টাকা এবং নিট প্রফিট ৩,৮০,০০০ টাকা। কোনো নির্দিষ্ট বিষয় জানতে চান?</p>
-                </div>
-
-                <div class="flex gap-2">
-                    <input type="text" placeholder="যেমন: এই মাসে কোন সাইজটি সবচেয়ে বেশি বিক্রি হয়েছে?" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-zinc-600">
-                    <button onclick="alert('AI মেসেজ প্রসেস করা হচ্ছে...')" class="bg-white text-zinc-950 px-4 py-2 rounded-lg text-xs font-semibold hover:bg-zinc-200">জিজ্ঞাসা করুন</button>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Mobile Bottom Navigation Bar -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-zinc-950 border-t border-zinc-800 flex justify-around py-2.5 text-zinc-400 z-50">
-        <button onclick="switchTab('dashboard')" class="mobile-nav-btn flex flex-col items-center gap-1 text-white text-[10px]" data-tab="dashboard">
-            <i class="fa-solid fa-chart-line text-sm"></i>
-            <span>Dashboard</span>
-        </button>
-        <button onclick="switchTab('products')" class="mobile-nav-btn flex flex-col items-center gap-1 hover:text-white text-[10px]" data-tab="products">
-            <i class="fa-solid fa-shirt text-sm"></i>
-            <span>Products</span>
-        </button>
-        <button onclick="switchTab('orders')" class="mobile-nav-btn flex flex-col items-center gap-1 hover:text-white text-[10px]" data-tab="orders">
-            <i class="fa-solid fa-cart-shopping text-sm"></i>
-            <span>Orders</span>
-        </button>
-        <button onclick="switchTab('pos')" class="mobile-nav-btn flex flex-col items-center gap-1 hover:text-white text-[10px]" data-tab="pos">
-            <i class="fa-solid fa-cash-register text-sm"></i>
-            <span>POS</span>
-        </button>
-        <button onclick="switchTab('ai')" class="mobile-nav-btn flex flex-col items-center gap-1 hover:text-emerald-400 text-[10px]" data-tab="ai">
-            <i class="fa-solid fa-robot text-sm"></i>
-            <span>AI Bot</span>
-        </button>
-    </nav>
-
-    <!-- Tab Switching JavaScript -->
-    <script>
-        function switchTab(tabId) {
-            // Hide all sections
-            const tabs = ['dashboard', 'products', 'inventory', 'production', 'orders', 'pos', 'finance', 'ai'];
-            tabs.forEach(t => {
-                const el = document.getElementById('tab-' + t);
-                if (el) el.classList.add('hidden');
-                
-                // Desktop nav reset
-                const navBtn = document.getElementById('nav-' + t);
-                if (navBtn) {
-                    navBtn.className = "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white transition";
-                }
-            });
-
-            // Show selected tab
-            const activeEl = document.getElementById('tab-' + tabId);
-            if (activeEl) activeEl.classList.remove('hidden');
-
-            // Highlight desktop nav
-            const activeNav = document.getElementById('nav-' + tabId);
-            if (activeNav) {
-                activeNav.className = "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg bg-zinc-800 text-white border border-zinc-700 transition";
-            }
-
-            // Highlight mobile nav
-            document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
-                if (btn.getAttribute('data-tab') === tabId) {
-                    btn.classList.add('text-white');
-                    btn.classList.remove('text-zinc-400');
-                } else {
-                    btn.classList.remove('text-white');
-                    btn.classList.add('text-zinc-400');
-                }
-            });
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            );
         }
+
+        // Sub-Components / Navigation Button
+        function NavItem({ id, icon, label, activeTab, setActiveTab }) {
+            const isActive = activeTab === id;
+            return (
+                <button onClick={() => setActiveTab(id)} className={`w-full text-left px-3 py-2 rounded-lg text-xs font-medium transition flex items-center gap-2.5 ${isActive ? 'bg-blue-600 text-white font-semibold' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}>
+                    <span>{icon}</span>
+                    <span>{label}</span>
+                </button>
+            );
+        }
+
+        // MODULE 01: DASHBOARD
+        function DashboardView({ orders, products, expenses }) {
+            const totalRev = orders.reduce((acc, curr) => acc + curr.total, 0);
+            const totalExp = expenses.reduce((acc, curr) => acc + curr.amount, 0);
+            return (
+                <div className="space-y-6">
+                    <h3 className="text-xl font-bold text-white">আজকের ব্যবসার রিয়েল-টাইম সামারি</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <Card title="আজকের মোট বিক্রয়" value={`৳ ${totalRev}`} color="border-blue-500" />
+                        <Card title="মোট অর্ডার" value={`${orders.length} টি`} color="border-emerald-500" />
+                        <Card title="আজকের মোট খরচ" value={`৳ ${totalExp}`} color="border-rose-500" />
+                        <Card title="আনুমানিক নিট লাভ" value={`৳ ${totalRev - totalExp}`} color="border-amber-500" />
+                    </div>
+                </div>
+            );
+        }
+
+        // MODULE 02 & 03: PRODUCTS & SIZE MATRIX
+        function ProductsView({ products, setProducts }) {
+            return (
+                <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                        <h3 className="text-xl font-bold text-white">পণ্য ও সাইজ ভ্যারিয়েন্ট ম্যাট্রিক্স</h3>
+                        <button className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-4 py-2 rounded-lg font-medium">+ নতুন পোশাক যোগ করুন</button>
+                    </div>
+                    <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                        <table className="w-full text-left text-xs border-collapse">
+                            <thead className="bg-slate-950 text-slate-400">
+                                <tr>
+                                    <th className="p-3">পণ্যের নাম</th>
+                                    <th className="p-3">SKU</th>
+                                    <th className="p-3">ক্যাটাগরি</th>
+                                    <th className="p-3">সাইজ & কালার</th>
+                                    <th className="p-3">মূল্য</th>
+                                    <th className="p-3">স্টক</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-800">
+                                {products.map(p => (
+                                    <tr key={p.id}>
+                                        <td className="p-3 font-semibold text-white">{p.name}</td>
+                                        <td className="p-3 text-slate-400">{p.sku}</td>
+                                        <td className="p-3 text-slate-300">{p.category}</td>
+                                        <td className="p-3"><span className="bg-slate-800 text-slate-300 px-2 py-0.5 rounded">{p.size} / {p.color}</span></td>
+                                        <td className="p-3 font-semibold text-emerald-400">৳ {p.price}</td>
+                                        <td className="p-3"><span className="text-emerald-400 font-bold">{p.stock} টি</span></td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            );
+        }
+
+        // MODULE 08: INVENTORY
+        function InventoryView({ products }) {
+            return (
+                <div className="space-y-4">
+                    <h3 className="text-xl font-bold text-white">ইনভেন্টরি ও স্টক লেজার</h3>
+                    <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl text-xs text-slate-400">
+                        প্রতিটি সাইজ ও কালার ভ্যারিয়েন্টের স্টক লেভেল এখান থেকে আপডেট ও স্টক-ইন / স্টক-আউট হিস্ট্রি ট্রাক করা যায়।
+                    </div>
+                </div>
+            );
+        }
+
+        // MODULE 09: ORDER MANAGEMENT
+        function OrdersView({ orders }) {
+            return (
+                <div className="space-y-4">
+                    <h3 className="text-xl font-bold text-white">অর্ডার তালিকা (Order Management)</h3>
+                    <div className="space-y-3">
+                        {orders.map(o => (
+                            <div key={o.id} className="bg-slate-900 border border-slate-800 p-4 rounded-xl flex justify-between items-center text-xs">
+                                <div>
+                                    <p className="font-bold text-white text-sm">{o.customer} <span className="text-slate-400 font-normal">({o.phone})</span></p>
+                                    <p className="text-slate-500 mt-0.5">Order ID: {o.id} | চ্যানেল: {o.channel}</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="font-bold text-emerald-400 text-sm">৳ {o.total}</p>
+                                    <span className="bg-amber-950 text-amber-400 border border-amber-800 px-2 py-0.5 rounded text-[10px]">{o.status}</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        // MODULE 12: POS
+        function PosView({ products }) {
+            return (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
+                    <div className="md:col-span-2 space-y-4">
+                        <h3 className="text-xl font-bold text-white">Point of Sale (POS Terminal)</h3>
+                        <div className="grid grid-cols-2 gap-3">
+                            {products.map(p => (
+                                <div key={p.id} className="bg-slate-900 border border-slate-800 p-3 rounded-lg hover:border-blue-500 cursor-pointer">
+                                    <p className="font-bold text-white">{p.name}</p>
+                                    <p className="text-slate-400 mt-1">৳ {p.price} | স্টক: {p.stock}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-4">
+                        <h4 className="font-bold text-white text-sm border-b border-slate-800 pb-2">কার্ট (Cart Summary)</h4>
+                        <p className="text-slate-500 text-center py-6">কার্ট খালি রয়েছে। পণ্য নির্বাচন করুন।</p>
+                    </div>
+                </div>
+            );
+        }
+
+        // MODULE 10: EXPENSES
+        function ExpensesView({ expenses }) {
+            return (
+                <div className="space-y-4">
+                    <h3 className="text-xl font-bold text-white">ব্যবসার খরচ খাত</h3>
+                    <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden text-xs">
+                        {expenses.map(e => (
+                            <div key={e.id} className="p-3 border-b border-slate-800 flex justify-between">
+                                <div>
+                                    <p className="font-bold text-white">{e.title}</p>
+                                    <p className="text-slate-500">{e.category} | তারিখ: {e.date}</p>
+                                </div>
+                                <p className="font-bold text-rose-400">৳ {e.amount}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        // Placeholder Panels for Remaining Modules
+        function CustomersView() { return <Panel title="গ্রাহক ডিরেক্টরি (Customer CRM)" text="কাস্টমারদের অর্ডার হিস্ট্রি এবং লাইফটাইম ভ্যালু ট্র্যাকিং।" />; }
+        function SuppliersView() { return <Panel title="সাপ্লায়ার ম্যানেজমেন্ট" text="সাপ্লায়ার প্রোফাইল, বকেয়া এবং কাপড়/কাঁচামাল ক্রয়ের হিসাব।" />; }
+        function FinanceView() { return <Panel title="আর্থিক লেজার (Finance)" text="ক্যাশ ইন, ক্যাশ আউট, বিকাশ/নগদ ব্যালেন্স এবং ব্যাংক স্টেটমেন্ট।" />; }
+        function ProfitView() { return <Panel title="প্রফিট অ্যানালিটিক্স (Profit & Loss)" text="Gross Profit এবং Net Profit হিসাব এবং মার্জিন রিপোর্ট।" />; }
+        function ReportsView() { return <Panel title="রিপোর্ট ও এক্সপোর্ট সেন্টার" text="PDF ও CSV ফরম্যাটে দৈনিক/মাসিক রিপোর্ট ডাউনলোড।" />; }
+        function EmployeesView() { return <Panel title="কর্মচারী পারমিশন ও অ্যাক্সেস" text="ম্যানেজার, সেলস স্টাফ এবং ইনভেন্টরি স্টাফদের রোল পারমিশন।" />; }
+        function BackupView() { return <Panel title="ডাটা ব্যাকআপ ও রিসেট" text="সম্পূর্ণ ডাটাবেস JSON ব্যাকআপ ডাউনলোড এবং রিস্টোর অপশন।" />; }
+        function SettingsView() { return <Panel title="বিজনেস সেটিং" text="ব্র্যান্ড নাম, লোগো, ভ্যাট এবং ডেলিভারি চার্জ সেটিংস।" />; }
+
+        function Panel({ title, text }) {
+            return (
+                <div className="bg-slate-900 border border-slate-800 p-6 rounded-xl space-y-2">
+                    <h3 className="text-lg font-bold text-white">{title}</h3>
+                    <p className="text-xs text-slate-400">{text}</p>
+                </div>
+            );
+        }
+
+        function Card({ title, value, color }) {
+            return (
+                <div className={`bg-slate-900 border-l-4 ${color} border-y border-r border-slate-800 p-4 rounded-xl`}>
+                    <p className="text-xs text-slate-400">{title}</p>
+                    <h4 className="text-2xl font-black text-white mt-1">{value}</h4>
+                </div>
+            );
+        }
+
+        // Render App
+        ReactDOM.render(<VyroWearApp />, document.getElementById('root'));
     </script>
 </body>
 </html>
